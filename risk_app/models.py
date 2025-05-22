@@ -1,20 +1,23 @@
 from django.db import models
 
-class Risk(models.Model):
-    number = models.AutoField(primary_key=True)
-    description = models.TextField()
-    risk_type = models.CharField(max_length=50)
-    risk_owner = models.CharField(max_length=100)
-    process = models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-    likelihood = models.IntegerField()
-    impact = models.IntegerField()
-    level = models.IntegerField(editable=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+RISK_TYPES = [
+    ('стратегический', 'Стратегический'),
+    ('корпоративный', 'Корпоративный'),
+    ('операционный', 'Операционный'),
+]
 
-    def save(self, *args, **kwargs):
-        self.level = self.likelihood * self.impact
-        super().save(*args, **kwargs)
+class Risk(models.Model):
+    description = models.TextField('Описание')
+    risk_type = models.CharField('Тип риска', max_length=50, choices=RISK_TYPES)
+    risk_owner = models.CharField('Владелец риска', max_length=100)
+    process = models.CharField('Процесс', max_length=100)
+    department = models.CharField('Подразделение', max_length=100)
+    likelihood = models.IntegerField('Вероятность (1-5)')
+    impact = models.IntegerField('Воздействие (1-5)')
+
+    @property
+    def risk_level(self):
+        return self.likelihood * self.impact
 
     def __str__(self):
-        return f"Risk #{self.number}"
+        return self.description
