@@ -12,3 +12,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('', lambda request: render(request, 'index.html')),
 ]
+path('risks/', lambda request: render(request, 'risk_list.html')),
