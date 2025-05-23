@@ -6,11 +6,12 @@
 </head>
 <body>
     <h1>Создание карточки риска</h1>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Сохранить</button>
     </form>
-    <a href="{% url 'risk_list' %}">Назад к списку</a>
+    <br>
+    <a href="{% url 'risk_list' %}">Назад к реестру рисков</a>
 </body>
 </html>
