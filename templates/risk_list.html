@@ -10,30 +10,49 @@
     <a href="{% url 'risk_create' %}">Добавить новый риск</a>
     <br><br>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Название риска</th>
-                <th>Описание</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for risk in risks %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ risk.name }}</td>
-                <td>{{ risk.description }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">Рисков пока нет.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <br>
-    <a href="{% url 'index' %}">На главную</a>
-</body>
-</html>
+   <table border="1">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Тип риска</th>
+            <th>Источник</th>
+            <th>Описание</th>
+            <th>Дата регистрации</th>
+            <th>Подразделение</th>
+            <th>Владелец риска</th>
+            <th>Процесс</th>
+            <th>Уровень риска</th>
+            <th>История оценки</th>
+            <th>Прикреплённые документы</th>
+            <th>Меры</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for risk in risks %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ risk.id }}</td>
+            <td>{{ risk.name }}</td>
+            <td>{{ risk.risk_type }}</td>
+            <td>{{ risk.source }}</td>
+            <td>{{ risk.description }}</td>
+            <td>{{ risk.registered_at }}</td>
+            <td>{{ risk.department }}</td>
+            <td>{{ risk.owner }}</td>
+            <td>{{ risk.process }}</td>
+            <td>{{ risk.level }}</td>
+            <td>{{ risk.assessment_history }}</td>
+            <td>
+                {% if risk.attachment %}
+                    <a href="{{ risk.attachment.url }}">Файл</a>
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ risk.measures }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
