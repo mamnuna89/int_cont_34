@@ -1,4 +1,3 @@
-# ⛔️ ВРЕМЕННЫЙ КОД для запуска миграции при деплое (удалить после успешного выполнения!)
 import django
 from django.core.management import call_command
 
