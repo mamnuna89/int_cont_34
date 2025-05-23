@@ -1,3 +1,9 @@
+import django
+from django.core.management import call_command
+
+django.setup()
+call_command('migrate')
+
 from django.shortcuts import render, redirect
 from .models import Risk
 from .forms import RiskForm
