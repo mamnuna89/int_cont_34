@@ -18,7 +18,7 @@ def risk_list(request):
 
 def risk_create(request):
     if request.method == 'POST':
-        form = RiskForm(request.POST)
+        form = RiskForm(request.POST, request.FILES)  # обязательно для загрузки файла
         if form.is_valid():
             form.save()
             return redirect('risk_list')
