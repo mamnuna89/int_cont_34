@@ -5,7 +5,6 @@ django.setup()
 call_command('makemigrations', 'risk_app')
 call_command('migrate')
 
-# ✅ ОСНОВНОЙ КОД ПРИЛОЖЕНИЯ
 from django.shortcuts import render, redirect
 from .models import Risk
 from .forms import RiskForm
