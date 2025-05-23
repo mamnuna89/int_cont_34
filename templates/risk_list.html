@@ -6,26 +6,34 @@
 </head>
 <body>
     <h1>Реестр рисков</h1>
-    <a href="{% url 'risk_create' %}">Добавить риск</a>
+
+    <a href="{% url 'risk_create' %}">Добавить новый риск</a>
+    <br><br>
+
     <table border="1">
-        <tr>
-            <th>Описание</th>
-            <th>Тип</th>
-            <th>Владелец</th>
-            <th>Процесс</th>
-            <th>Подразделение</th>
-            <th>Уровень риска</th>
-        </tr>
-        {% for risk in risks %}
-        <tr>
-            <td>{{ risk.description }}</td>
-            <td>{{ risk.risk_type }}</td>
-            <td>{{ risk.risk_owner }}</td>
-            <td>{{ risk.process }}</td>
-            <td>{{ risk.department }}</td>
-            <td>{{ risk.risk_level }}</td>
-        </tr>
-        {% endfor %}
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Название риска</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for risk in risks %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ risk.name }}</td>
+                <td>{{ risk.description }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Рисков пока нет.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
+    <br>
+    <a href="{% url 'index' %}">На главную</a>
 </body>
 </html>
