@@ -8,3 +8,7 @@ urlpatterns = [
     path('risks/', views.risk_list, name='risk_list'),
     path('risks/add/', views.risk_create, name='risk_create'),
 ]
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
