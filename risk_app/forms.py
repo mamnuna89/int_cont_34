@@ -4,4 +4,17 @@ from .models import Risk
 class RiskForm(forms.ModelForm):
     class Meta:
         model = Risk
-        fields = ['description', 'risk_type', 'risk_owner', 'process', 'department', 'likelihood', 'impact']
+        fields = [
+            'name',
+            'risk_type',
+            'source',
+            'description',
+            'registered_at',
+            'department',
+            'owner',
+            'process',
+            'probability',
+            'impact',
+            'attachment',
+            'measures'
+        ]
