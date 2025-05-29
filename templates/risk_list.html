@@ -6,53 +6,52 @@
 </head>
 <body>
     <h1>Реестр рисков</h1>
-
-    <a href="{% url 'risk_create' %}">Добавить новый риск</a>
-    <br><br>
-
-   <table border="1">
-    <thead>
-        <tr>
-            <th>№</th>
-            <th>ID</th>
-            <th>Название</th>
-            <th>Тип риска</th>
-            <th>Источник</th>
-            <th>Описание</th>
-            <th>Дата регистрации</th>
-            <th>Подразделение</th>
-            <th>Владелец риска</th>
-            <th>Процесс</th>
-            <th>Уровень риска</th>
-            <th>История оценки</th>
-            <th>Прикреплённые документы</th>
-            <th>Меры</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for risk in risks %}
-        <tr>
-            <td>{{ forloop.counter }}</td>
-            <td>{{ risk.id }}</td>
-            <td>{{ risk.name }}</td>
-            <td>{{ risk.risk_type }}</td>
-            <td>{{ risk.source }}</td>
-            <td>{{ risk.description }}</td>
-            <td>{{ risk.registered_at }}</td>
-            <td>{{ risk.department }}</td>
-            <td>{{ risk.owner }}</td>
-            <td>{{ risk.process }}</td>
-            <td>{{ risk.level }}</td>
-            <td>{{ risk.assessment_history }}</td>
-            <td>
-                {% if risk.attachment %}
-                    <a href="{{ risk.attachment.url }}">Файл</a>
-                {% else %}
-                    —
-                {% endif %}
-            </td>
-            <td>{{ risk.measures }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <a href="{% url 'risk_create' %}">Добавить риск</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Код риска</th>
+                <th>Название</th>
+                <th>Тип риска</th>
+                <th>Источник</th>
+                <th>Дата регистрации</th>
+                <th>Подразделение</th>
+                <th>Владелец риска</th>
+                <th>Процесс</th>
+                <th>Вероятность</th>
+                <th>Воздействие</th>
+                <th>Уровень риска</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for risk in risks %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ risk.risk_code }}</td>
+                <td>{{ risk.name }}</td>
+                <td>{{ risk.risk_type }}</td>
+                <td>{{ risk.source }}</td>
+                <td>{{ risk.registered_at }}</td>
+                <td>{{ risk.department }}</td>
+                <td>{{ risk.owner }}</td>
+                <td>{{ risk.process }}</td>
+                <td>{{ risk.probability }}</td>
+                <td>{{ risk.impact }}</td>
+                <td style="background-color:
+                    {% if risk.level <= 6 %}
+                        lightgreen
+                    {% elif risk.level <= 14 %}
+                        yellow
+                    {% else %}
+                        tomato
+                    {% endif %}
+                ">
+                    {{ risk.level }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

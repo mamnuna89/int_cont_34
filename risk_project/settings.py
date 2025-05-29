@@ -7,6 +7,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'risk_app',
+    'control_app',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',

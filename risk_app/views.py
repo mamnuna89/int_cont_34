@@ -1,10 +1,3 @@
-import django
-from django.core.management import call_command
-
-django.setup()
-call_command('makemigrations', 'risk_app')
-call_command('migrate')
-
 from django.shortcuts import render, redirect
 from .models import Risk
 from .forms import RiskForm
@@ -18,7 +11,7 @@ def risk_list(request):
 
 def risk_create(request):
     if request.method == 'POST':
-        form = RiskForm(request.POST, request.FILES)  # обязательно для загрузки файла
+        form = RiskForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('risk_list')
