@@ -18,7 +18,7 @@ class Risk(models.Model):
         if not self.risk_code:
             count = Risk.objects.count() + 1
             year = datetime.now().year
-            self.risk_code = f"RISK-2-{year}-{count:03d}"
+            self.risk_code = f"CTRL-{year}-{count:03d}"
         self.level = self.probability * self.impact
         super().save(*args, **kwargs)
 

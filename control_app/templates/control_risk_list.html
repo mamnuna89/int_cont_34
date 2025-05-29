@@ -1,0 +1,40 @@
+<h1>Реестр рисков (Внутренний контроль)</h1>
+
+<form method="get">
+    <label>Тип риска: <input type="text" name="risk_type"></label>
+    <label>Подразделение: <input type="text" name="department"></label>
+    <label>Уровень риска: <input type="text" name="level"></label>
+    <button type="submit">Фильтр</button>
+</form>
+
+<table border="1">
+    <tr>
+        <th>№</th>
+        <th>Код</th>
+        <th>Название</th>
+        <th>Тип</th>
+        <th>Источник</th>
+        <th>Дата</th>
+        <th>Подразделение</th>
+        <th>Владелец</th>
+        <th>Процесс</th>
+        <th>Уровень риска</th>
+    </tr>
+    {% for risk in risks %}
+    <tr style="background-color:
+        {% if risk.level <= 6 %}lightgreen
+        {% elif risk.level <= 14 %}yellow
+        {% else %}tomato{% endif %};">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ risk.risk_code }}</td>
+        <td>{{ risk.name }}</td>
+        <td>{{ risk.risk_type }}</td>
+        <td>{{ risk.source }}</td>
+        <td>{{ risk.registered_at }}</td>
+        <td>{{ risk.department }}</td>
+        <td>{{ risk.owner }}</td>
+        <td>{{ risk.process }}</td>
+        <td>{{ risk.level }}</td>
+    </tr>
+    {% endfor %}
+</table>

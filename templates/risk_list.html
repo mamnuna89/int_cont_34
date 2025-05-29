@@ -1,23 +1,21 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Реестр рисков</title>
 </head>
 <body>
     <h1>Реестр рисков</h1>
-    <a href="{% url 'risk_create' %}">Добавить риск</a>
     <table border="1">
         <thead>
             <tr>
                 <th>№</th>
                 <th>Код риска</th>
                 <th>Название</th>
-                <th>Тип риска</th>
+                <th>Тип</th>
                 <th>Источник</th>
                 <th>Дата регистрации</th>
                 <th>Подразделение</th>
-                <th>Владелец риска</th>
+                <th>Владелец</th>
                 <th>Процесс</th>
                 <th>Вероятность</th>
                 <th>Воздействие</th>
@@ -38,20 +36,11 @@
                 <td>{{ risk.process }}</td>
                 <td>{{ risk.probability }}</td>
                 <td>{{ risk.impact }}</td>
-                <td style="background-color:
-                    {% if risk.level <= 6 %}
-                        lightgreen
-                    {% elif risk.level <= 14 %}
-                        yellow
-                    {% else %}
-                        tomato
-                    {% endif %}
-                ">
-                    {{ risk.level }}
-                </td>
+                <td>{{ risk.level }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <a href="{% url 'risk_create' %}">Добавить новый риск</a>
 </body>
 </html>
