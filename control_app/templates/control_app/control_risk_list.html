@@ -1,48 +1,64 @@
-from django.shortcuts import render, redirect
-from .models import Risk
-from .forms import RiskForm
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Реестр рисков (Внутренний контроль)</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-# 👉 Отображение списка рисков
-def risk_list(request):
-    risks = Risk.objects.all()
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
 
-    # Фильтрация
-    department_filter = request.GET.get('department')
-    risk_type_filter = request.GET.get('risk_type')
-    level_filter = request.GET.get('level')
+        .green { background-color: #d4edda; }
+        .yellow { background-color: #fff3cd; }
+        .red { background-color: #f8d7da; }
+        .gray { background-color: #e2e3e5; }
+    </style>
+</head>
+<body>
+    <h1>Реестр рисков (Внутренний контроль)</h1>
 
-    if department_filter:
-        risks = risks.filter(department__icontains=department_filter)
-    if risk_type_filter:
-        risks = risks.filter(risk_type__icontains=risk_type_filter)
-    if level_filter:
-        try:
-            level_value = int(level_filter)
-            risks = risks.filter(level=level_value)
-        except ValueError:
-            pass
+    <table>
+        <thead>
+            <tr>
+                <th>Код</th>
+                <th>Название</th>
+                <th>Тип риска</th>
+                <th>Источник</th>
+                <th>Дата регистрации</th>
+                <th>Подразделение</th>
+                <th>Владелец риска</th>
+                <th>Процесс</th>
+                <th>Вероятность</th>
+                <th>Воздействие</th>
+                <th>Уровень риска</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for risk in risks %}
+            <tr class="{{ risk.color }}">
+                <td>{{ risk.risk_code }}</td>
+                <td>{{ risk.name }}</td>
+                <td>{{ risk.risk_type }}</td>
+                <td>{{ risk.source }}</td>
+                <td>{{ risk.registered_at }}</td>
+                <td>{{ risk.department }}</td>
+                <td>{{ risk.owner }}</td>
+                <td>{{ risk.process }}</td>
+                <td>{{ risk.probability }}</td>
+                <td>{{ risk.impact }}</td>
+                <td>{{ risk.level }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    # Для цветовой индикации
-    for risk in risks:
-        if risk.level is not None:
-            if risk.level <= 6:
-                risk.color = 'green'
-            elif 7 <= risk.level <= 14:
-                risk.color = 'yellow'
-            else:
-                risk.color = 'red'
-        else:
-            risk.color = 'gray'
-
-    return render(request, 'control_app/control_risk_list.html', {'risks': risks})
-
-# 👉 Создание нового риска
-def risk_create(request):
-    if request.method == 'POST':
-        form = RiskForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('risk_list')
-    else:
-        form = RiskForm()
-    return render(request, 'control_app/control_risk_form.html', {'form': form})
+    <br>
+    <a href="{% url 'risk_create' %}">Добавить риск</a>
+</body>
+</html>
