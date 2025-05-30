@@ -6,6 +6,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'main_app',
     'risk_app',
     'control_app',
     'rest_framework',

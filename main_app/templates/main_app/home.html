@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Система внутреннего контроля</title>
+    <style>
+        body { font-family: Arial; }
+        .sidebar {
+            width: 250px;
+            background: #f2f2f2;
+            padding: 20px;
+            float: left;
+            height: 100vh;
+        }
+        .content { margin-left: 270px; padding: 20px; }
+        .menu-item { margin-bottom: 10px; }
+        .submenu { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Модули</h2>
+        <div class="menu-item">
+            <strong>Управление рисками</strong>
+            <div class="submenu">
+                <a href="{% url 'risk_list' %}">Реестр рисков</a><br>
+                <a href="{% url 'risk_create' %}">Добавить риск</a>
+            </div>
+        </div>
+        <div class="menu-item">
+            <strong>Внутренний контроль</strong>
+            <div class="submenu">
+                <a href="{% url 'control_risk_list' %}">Реестр рисков</a><br>
+                <a href="{% url 'control_risk_create' %}">Добавить риск</a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <h1>Добро пожаловать в систему внутреннего контроля банка</h1>
+        <p>Выберите модуль слева для работы.</p>
+    </div>
+</body>
+</html>
