@@ -1,3 +1,4 @@
+<!-- control_app/templates/control_app/control_point_form.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,11 +7,47 @@
 </head>
 <body>
     <h1>Добавить контрольную точку</h1>
+
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <table>
+            <tr>
+                <th>{{ form.process.label_tag }}</th>
+                <td>{{ form.process }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.action.label_tag }}</th>
+                <td>{{ form.action }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.procedure.label_tag }}</th>
+                <td>{{ form.procedure }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.control_type.label_tag }}</th>
+                <td>{{ form.control_type }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.frequency.label_tag }}</th>
+                <td>{{ form.frequency }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.responsible.label_tag }}</th>
+                <td>{{ form.responsible }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.method.label_tag }}</th>
+                <td>{{ form.method }}</td>
+            </tr>
+            <tr>
+                <th>{{ form.is_implemented.label_tag }}</th>
+                <td>{{ form.is_implemented }}</td>
+            </tr>
+        </table>
+
         <button type="submit">Сохранить</button>
     </form>
-    <a href="{% url 'control_point_list' %}">Назад к списку</a>
+
+    <p><a href="{% url 'control_index' %}">← Назад</a></p>
 </body>
 </html>

@@ -16,15 +16,33 @@ class ControlPointForm(forms.ModelForm):
         model = ControlPoint
         fields = [
             'process',
-            'control_action',
-            'control_procedure',
+            'action',
+            'procedure',
             'control_type',
             'frequency',
-            'responsible_person',
-            'control_method',
-            'implemented',
+            'responsible',
+            'method',
+            'is_implemented',
         ]
+
+        labels = {
+            'process': 'Процесс',
+            'action': 'Контрольное действие',
+            'procedure': 'Контрольная процедура',
+            'control_type': 'Тип контроля',
+            'frequency': 'Частота',
+            'responsible': 'Ответственное лицо',
+            'method': 'Метод контроля',
+            'is_implemented': 'Контроль внедрён',
+        }
+
         widgets = {
-            'control_type': forms.Select(),
-            'control_method': forms.Select(),
+            'control_type': forms.Select(choices=[
+                ('preventive', 'Предотвращающий'),
+                ('detective', 'Обнаруживающий'),
+            ]),
+            'method': forms.Select(choices=[
+                ('manual', 'Ручной'),
+                ('automated', 'Автоматический'),
+            ]),
         }
