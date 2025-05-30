@@ -46,3 +46,18 @@ def risk_create(request):
     else:
         form = RiskForm()
     return render(request, 'control_app/control_risk_form.html', {'form': form})
+
+from django.shortcuts import render, redirect
+from .forms import ControlPointForm
+from .models import ControlPoint
+
+def control_point_create(request):
+    if request.method == 'POST':
+        form = ControlPointForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('control_point_list')  # создадим позже
+    else:
+        form = ControlPointForm()
+    return render(request, 'control_point_form.html', {'form': form})
+

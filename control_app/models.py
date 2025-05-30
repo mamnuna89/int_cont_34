@@ -24,3 +24,27 @@ class Risk(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class ControlPoint(models.Model):
+    CONTROL_TYPE_CHOICES = [
+        ('preventive', 'Предотвращающий'),
+        ('detective', 'Обнаруживающий'),
+    ]
+
+    CONTROL_METHOD_CHOICES = [
+        ('manual', 'Ручной'),
+        ('automated', 'Автоматический'),
+    ]
+
+    process = models.CharField("Процесс", max_length=255)
+    control_action = models.CharField("Контрольное действие", max_length=255)
+    control_procedure = models.TextField("Контрольная процедура")
+    control_type = models.CharField("Тип контроля", max_length=20, choices=CONTROL_TYPE_CHOICES)
+    frequency = models.CharField("Частота", max_length=100)
+    responsible_person = models.CharField("Ответственное лицо", max_length=100)
+    control_method = models.CharField("Метод контроля", max_length=20, choices=CONTROL_METHOD_CHOICES)
+    implemented = models.BooleanField("Контроль внедрён", default=False)
+
+    def __str__(self):
+        return f"{self.process} — {self.control_action}"
