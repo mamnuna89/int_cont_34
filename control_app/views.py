@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Risk
-from .forms import RiskForm
+from .models import Risk, ControlPoint
+from .forms import RiskForm, ControlPointForm
+
+# 👉 Главная страница модуля внутреннего контроля
+def control_index(request):
+    return render(request, 'control_app/control_index.html')
 
 # 👉 Отображение списка рисков
 def risk_list(request):
@@ -22,7 +26,7 @@ def risk_list(request):
         except ValueError:
             pass
 
-    # Для цветовой индикации
+    # Цветовая индикация
     for risk in risks:
         if risk.level is not None:
             if risk.level <= 6:
@@ -42,22 +46,19 @@ def risk_create(request):
         form = RiskForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('risk_list')
+            return redirect('control_risk_list')  # исправлено на правильный redirect
     else:
         form = RiskForm()
     return render(request, 'control_app/control_risk_form.html', {'form': form})
 
-from django.shortcuts import render, redirect
-from .forms import ControlPointForm
-from .models import ControlPoint
-
+# 👉 Создание контрольной точки
 def control_point_create(request):
     if request.method == 'POST':
         form = ControlPointForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('control_point_list')  # создадим позже
+            return redirect('control_index')  # временно возвращаемся на главную
     else:
         form = ControlPointForm()
-    return render(request, 'control_point_form.html', {'form': form})
+    return render(request, 'control_app/control_point_form.html', {'form': form})
 
