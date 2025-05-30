@@ -4,40 +4,65 @@
     <meta charset="UTF-8">
     <title>Система внутреннего контроля</title>
     <style>
-        body { font-family: Arial; }
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
         .sidebar {
             width: 250px;
-            background: #f2f2f2;
+            background-color: #f0f0f0;
             padding: 20px;
-            float: left;
             height: 100vh;
         }
-        .content { margin-left: 270px; padding: 20px; }
-        .menu-item { margin-bottom: 10px; }
-        .submenu { margin-left: 20px; }
+        .content {
+            padding: 20px;
+        }
+        .module {
+            margin-bottom: 15px;
+        }
+        .module-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .module-links a {
+            display: block;
+            margin-left: 15px;
+            margin-bottom: 5px;
+            text-decoration: none;
+            color: #007bff;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>Модули</h2>
-        <div class="menu-item">
-            <strong>Управление рисками</strong>
-            <div class="submenu">
-                <a href="{% url 'risk_list' %}">Реестр рисков</a><br>
+
+        <!-- Управление рисками -->
+        <div class="module">
+            <div class="module-title">Управление рисками</div>
+            <div class="module-links">
                 <a href="{% url 'risk_create' %}">Добавить риск</a>
+                <a href="{% url 'risk_list' %}">Реестр рисков</a>
             </div>
         </div>
-        <div class="menu-item">
-            <strong>Внутренний контроль</strong>
-            <div class="submenu">
-                <a href="{% url 'control_risk_list' %}">Реестр рисков</a><br>
+
+        <!-- Внутренний контроль -->
+        <div class="module">
+            <div class="module-title">Внутренний контроль</div>
+            <div class="module-links">
                 <a href="{% url 'control_risk_create' %}">Добавить риск</a>
+                <a href="{% url 'control_risk_list' %}">Реестр рисков</a>
+                <a href="{% url 'control_point_create' %}">Добавить контрольную точку</a>
+                <a href="{% url 'control_point_list' %}">Реестр контрольных точек</a>
             </div>
         </div>
+
+        <!-- Здесь можно добавить другие модули позже -->
     </div>
+
     <div class="content">
         <h1>Добро пожаловать в систему внутреннего контроля банка</h1>
-        <p>Выберите модуль слева для работы.</p>
+        <p>Пожалуйста, выберите модуль слева для начала работы.</p>
     </div>
 </body>
 </html>

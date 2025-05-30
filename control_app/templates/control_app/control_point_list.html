@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Контрольные точки</title>
+</head>
+<body>
+    <h1>Контрольные точки</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Процесс</th>
+                <th>Контрольное действие</th>
+                <th>Контрольная процедура</th>
+                <th>Тип контроля</th>
+                <th>Частота</th>
+                <th>Ответственный</th>
+                <th>Метод</th>
+                <th>Контроль внедрён</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for point in control_points %}
+                <tr>
+                    <td>{{ point.process }}</td>
+                    <td>{{ point.action }}</td>
+                    <td>{{ point.procedure }}</td>
+                    <td>{{ point.control_type }}</td>
+                    <td>{{ point.frequency }}</td>
+                    <td>{{ point.responsible }}</td>
+                    <td>{{ point.method }}</td>
+                    <td>{% if point.implemented %}Да{% else %}Нет{% endif %}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="8">Нет данных</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="{% url 'control_point_create' %}">➕ Добавить контрольную точку</a>
+</body>
+</html>

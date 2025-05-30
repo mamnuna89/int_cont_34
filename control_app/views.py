@@ -62,3 +62,6 @@ def control_point_create(request):
         form = ControlPointForm()
     return render(request, 'control_app/control_point_form.html', {'form': form})
 
+def control_point_list(request):
+    control_points = ControlPoint.objects.all()
+    return render(request, 'control_app/control_point_list.html', {'control_points': control_points})
