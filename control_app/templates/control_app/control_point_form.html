@@ -1,53 +1,71 @@
-<!-- control_app/templates/control_app/control_point_form.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Добавить контрольную точку</title>
+  <meta charset="UTF-8">
+  <title>Добавить контрольную точку</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <h1>Добавить контрольную точку</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <th>{{ form.process.label_tag }}</th>
-                <td>{{ form.process }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.action.label_tag }}</th>
-                <td>{{ form.action }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.procedure.label_tag }}</th>
-                <td>{{ form.procedure }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.control_type.label_tag }}</th>
-                <td>{{ form.control_type }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.frequency.label_tag }}</th>
-                <td>{{ form.frequency }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.responsible.label_tag }}</th>
-                <td>{{ form.responsible }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.method.label_tag }}</th>
-                <td>{{ form.method }}</td>
-            </tr>
-            <tr>
-                <th>{{ form.is_implemented.label_tag }}</th>
-                <td>{{ form.is_implemented }}</td>
-            </tr>
-        </table>
+  <h2>Добавить контрольную точку</h2>
 
-        <button type="submit">Сохранить</button>
-    </form>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
 
-    <p><a href="{% url 'control_index' %}">← Назад</a></p>
+    {% for field in form %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}
+        <div style="color: red;">{{ field.errors }}</div>
+      {% endif %}
+    {% endfor %}
+
+    <button type="submit">Сохранить</button>
+  </form>
+
 </body>
 </html>
+

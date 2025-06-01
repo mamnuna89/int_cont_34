@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>BPMN Редактор</title>
+  <script src="https://unpkg.com/bpmn-js@10.4.0/dist/bpmn-modeler.development.js"></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #canvas {
+      height: 90vh;
+      width: 100%;
+      border: 1px solid #ccc;
+    }
+    #buttons {
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="buttons">
+    <button onclick="saveXML()">💾 Сохранить BPMN</button>
+    <button onclick="saveSVG()">🖼 Скачать изображение</button>
+  </div>
+
+  <div id="canvas"></div>
+
+  <script>
+    const bpmnModeler = new BpmnJS({
+      container: '#canvas'
+    });
+
+    bpmnModeler.createDiagram();
+
+    function saveXML() {
+      bpmnModeler.saveXML({ format: true }, function(err, xml) {
+        if (!err) {
+          const blob = new Blob([xml], { type: 'application/xml' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'diagram.bpmn';
+          link.click();
+        }
+      });
+    }
+
+    function saveSVG() {
+      bpmnModeler.saveSVG(function(err, svg) {
+        if (!err) {
+          const blob = new Blob([svg], { type: 'image/svg+xml' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'diagram.svg';
+          link.click();
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

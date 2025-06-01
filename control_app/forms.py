@@ -1,5 +1,5 @@
 from django import forms
-from .models import Risk
+from .models import Risk, ControlPoint
 
 class RiskForm(forms.ModelForm):
     class Meta:
@@ -8,40 +8,36 @@ class RiskForm(forms.ModelForm):
             'name', 'risk_type', 'source', 'registered_at',
             'department', 'owner', 'process', 'probability', 'impact'
         ]
-        from django import forms
-from .models import ControlPoint
 
 class ControlPointForm(forms.ModelForm):
     class Meta:
         model = ControlPoint
         fields = [
             'process',
-            'action',
-            'procedure',
+            'control_action',
+            'control_procedure',
             'control_type',
             'frequency',
-            'responsible',
-            'method',
-            'is_implemented',
+            'responsible_person',
+            'control_method',
+            'implemented',
         ]
-
         labels = {
             'process': 'Процесс',
-            'action': 'Контрольное действие',
-            'procedure': 'Контрольная процедура',
+            'control_action': 'Контрольное действие',
+            'control_procedure': 'Контрольная процедура',
             'control_type': 'Тип контроля',
             'frequency': 'Частота',
-            'responsible': 'Ответственное лицо',
-            'method': 'Метод контроля',
-            'is_implemented': 'Контроль внедрён',
+            'responsible_person': 'Ответственное лицо',
+            'control_method': 'Метод контроля',
+            'implemented': 'Контроль внедрён',
         }
-
         widgets = {
             'control_type': forms.Select(choices=[
                 ('preventive', 'Предотвращающий'),
                 ('detective', 'Обнаруживающий'),
             ]),
-            'method': forms.Select(choices=[
+            'control_method': forms.Select(choices=[
                 ('manual', 'Ручной'),
                 ('automated', 'Автоматический'),
             ]),
