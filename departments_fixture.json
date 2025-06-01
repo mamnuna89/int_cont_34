@@ -1,0 +1,118 @@
+[
+  {
+    "model": "control_app.department",
+    "pk": 1,
+    "fields": {
+      "name": "Финансовый департамент"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 1,
+    "fields": {
+      "department": 1,
+      "name": "Отдел финансового учёта"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 2,
+    "fields": {
+      "department": 1,
+      "name": "Отдел финансового анализа"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 3,
+    "fields": {
+      "department": 1,
+      "name": "Отдел предоставления финансовых отчётов"
+    }
+  },
+  {
+    "model": "control_app.department",
+    "pk": 2,
+    "fields": {
+      "name": "Операционный департамент"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 4,
+    "fields": {
+      "department": 2,
+      "name": "Отдел казначейства"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 5,
+    "fields": {
+      "department": 2,
+      "name": "Отдел работы с корсчетами"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 6,
+    "fields": {
+      "department": 2,
+      "name": "Касса"
+    }
+  },
+  {
+    "model": "control_app.department",
+    "pk": 3,
+    "fields": {
+      "name": "Департамент обслуживания клиентов"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 7,
+    "fields": {
+      "department": 3,
+      "name": "Отдел обслуживания клиентов"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 8,
+    "fields": {
+      "department": 3,
+      "name": "Отдел контроля качества"
+    }
+  },
+  {
+    "model": "control_app.department",
+    "pk": 4,
+    "fields": {
+      "name": "Департамент дистанционного обслуживания"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 9,
+    "fields": {
+      "department": 4,
+      "name": "Отдел звонков (входящие/исходящие)"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 10,
+    "fields": {
+      "department": 4,
+      "name": "Отдел обработки чатов"
+    }
+  },
+  {
+    "model": "control_app.division",
+    "pk": 11,
+    "fields": {
+      "department": 4,
+      "name": "Отдел контроля качества"
+    }
+  }
+]

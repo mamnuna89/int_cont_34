@@ -1,0 +1,38 @@
+<!-- templates/control_app/department_structure.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Структура департаментов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        .department {
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-left: 5px solid #007bff;
+        }
+        .division {
+            margin-left: 20px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Структура департаментов</h1>
+    {% for department in departments %}
+        <div class="department">
+            <strong>{{ department.name }}</strong>
+            {% for division in department.divisions.all %}
+                <div class="division">— {{ division.name }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Risk, ControlPoint
+from .models import Risk, ControlPoint, Department, Division
 from .forms import RiskForm, ControlPointForm
+
 
 # 👉 Главная страница модуля внутреннего контроля
 def control_index(request):
@@ -65,3 +66,7 @@ def control_point_create(request):
 def control_point_list(request):
     control_points = ControlPoint.objects.all()
     return render(request, 'control_app/control_point_list.html', {'control_points': control_points})
+
+def department_structure(request):
+    departments = Department.objects.prefetch_related('divisions').all()
+    return render(request, 'control_app/department_structure.html', {'departments': departments})
