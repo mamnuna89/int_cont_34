@@ -7,6 +7,22 @@
 <body>
     <h1>Контрольные точки</h1>
 
+   <form method="get">
+    <label for="department">Фильтр по департаменту:</label>
+    <select name="department" id="department" onchange="this.form.submit()">
+        <option value="">-- Все департаменты --</option>
+        {% for dep in departments %}
+            <option value="{{ dep.name }}" {% if dep.name == selected_department %}selected{% endif %}>
+                {{ dep.name }}
+            </option>
+        {% endfor %}
+    </select>
+</form>
+
+<br>
+
+
+    <!-- 📋 Таблица контрольных точек -->
     <table border="1">
         <thead>
             <tr>
@@ -24,12 +40,12 @@
             {% for point in control_points %}
                 <tr>
                     <td>{{ point.process }}</td>
-                    <td>{{ point.action }}</td>
-                    <td>{{ point.procedure }}</td>
-                    <td>{{ point.control_type }}</td>
+                    <td>{{ point.control_action }}</td>
+                    <td>{{ point.control_procedure }}</td>
+                    <td>{{ point.get_control_type_display }}</td>
                     <td>{{ point.frequency }}</td>
-                    <td>{{ point.responsible }}</td>
-                    <td>{{ point.method }}</td>
+                    <td>{{ point.responsible_person }}</td>
+                    <td>{{ point.get_control_method_display }}</td>
                     <td>{% if point.implemented %}Да{% else %}Нет{% endif %}</td>
                 </tr>
             {% empty %}

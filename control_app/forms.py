@@ -21,6 +21,7 @@ class ControlPointForm(forms.ModelForm):
             'responsible_person',
             'control_method',
             'implemented',
+            'division',  # ✅ выбираем только отдел
         ]
         labels = {
             'process': 'Процесс',
@@ -31,6 +32,7 @@ class ControlPointForm(forms.ModelForm):
             'responsible_person': 'Ответственное лицо',
             'control_method': 'Метод контроля',
             'implemented': 'Контроль внедрён',
+            'division': 'Отдел',
         }
         widgets = {
             'control_type': forms.Select(choices=[

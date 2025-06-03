@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
     path('', views.risk_list, name='risk_list'),
     path('add/', views.risk_create, name='risk_create'),
+    path('bpmn/', include('bpmn_app.urls')),
 ]

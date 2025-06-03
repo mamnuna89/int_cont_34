@@ -58,14 +58,29 @@ def control_point_create(request):
         form = ControlPointForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('control_index')  # временно возвращаемся на главную
+            return redirect('control_point_list')
     else:
         form = ControlPointForm()
     return render(request, 'control_app/control_point_form.html', {'form': form})
 
+from .models import Department  # убедись, что импорт есть
+
 def control_point_list(request):
-    control_points = ControlPoint.objects.all()
-    return render(request, 'control_app/control_point_list.html', {'control_points': control_points})
+    selected_department = request.GET.get('department')
+
+    if selected_department:
+        control_points = ControlPoint.objects.filter(division__department__name=selected_department)
+    else:
+        control_points = ControlPoint.objects.all()
+
+    departments = Department.objects.all()  # 🔄 для фильтра
+
+    return render(request, 'control_app/control_point_list.html', {
+        'control_points': control_points,
+        'departments': departments,
+        'selected_department': selected_department,
+    })
+
 
 def department_structure(request):
     departments = Department.objects.prefetch_related('divisions').all()

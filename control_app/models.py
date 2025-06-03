@@ -1,6 +1,19 @@
 from django.db import models
 from datetime import datetime
 
+class Department(models.Model):
+    name = models.CharField("Департамент", max_length=200, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class Division(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
+    name = models.CharField("Отдел", max_length=200)
+
+    def __str__(self):
+        return f"{self.department.name} – {self.name}"
+
 class Risk(models.Model):
     risk_code = models.CharField("Код риска", max_length=20, unique=True, blank=True)
     name = models.CharField("Название", max_length=255)
@@ -24,7 +37,6 @@ class Risk(models.Model):
 
     def __str__(self):
         return self.name
-    
 
 class ControlPoint(models.Model):
     CONTROL_TYPE_CHOICES = [
@@ -46,18 +58,13 @@ class ControlPoint(models.Model):
     control_method = models.CharField("Метод контроля", max_length=20, choices=CONTROL_METHOD_CHOICES)
     implemented = models.BooleanField("Контроль внедрён", default=False)
 
+    division = models.ForeignKey('Division', verbose_name="Отдел", on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey('Department', verbose_name="Департамент", on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        if self.division:
+            self.department = self.division.department
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.process} — {self.control_action}"
-
-class Department(models.Model):
-    name = models.CharField("Департамент", max_length=200, unique=True)
-
-    def __str__(self):
-        return self.name
-
-class Division(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
-    name = models.CharField("Отдел", max_length=200)
-
-    def __str__(self):
-        return f"{self.department.name} – {self.name}"

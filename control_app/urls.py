@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import department_structure  # ⬅️ вот это обязательно нужно
 
