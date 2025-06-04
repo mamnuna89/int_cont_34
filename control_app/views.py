@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
-from .models import Risk, ControlPoint, Department, Division
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+from .models import Risk, ControlPoint, Department, Division, ProcessDiagram
 from .forms import RiskForm, ControlPointForm
-from .models import Department
+
+
 
 # 👉 Главная страница модуля внутреннего контроля
 def control_index(request):
@@ -90,3 +94,31 @@ def process_map_overview(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/process_map_overview.html', {'departments': departments})
 
+def diagram_list(request):
+    departments = Department.objects.prefetch_related('divisions__processdiagram_set')
+    return render(request, 'control_app/diagram_list.html', {
+        'departments': departments
+    })
+
+# 👉 Сохранение схемы из редактора
+@require_POST
+def save_process_diagram(request):
+    name = request.POST.get('name')
+    department_id = request.POST.get('department_id')
+    division_id = request.POST.get('division_id')
+    bpmn_xml = request.POST.get('bpmn_xml')
+
+    department = Department.objects.get(id=department_id)
+    division = Division.objects.get(id=division_id)
+
+    diagram = ProcessDiagram.objects.create(
+        name=name,
+        department=department,
+        division=division,
+        bpmn_xml=bpmn_xml,
+        created_by=request.user
+    )
+    return JsonResponse({'status': 'success', 'diagram_id': diagram.id})
+def editor_view(request):
+    departments = Department.objects.prefetch_related('divisions').all()
+    return render(request, 'control_app/editor.html', {'departments': departments})

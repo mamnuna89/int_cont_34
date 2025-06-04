@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 
 class Department(models.Model):
     name = models.CharField("Департамент", max_length=200, unique=True)
@@ -69,3 +70,14 @@ class ControlPoint(models.Model):
 
     def __str__(self):
         return f"{self.process} — {self.control_action}"
+
+class ProcessDiagram(models.Model):
+    name = models.CharField("Название схемы", max_length=255)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name="Департамент")
+    division = models.ForeignKey(Division, on_delete=models.CASCADE, verbose_name="Отдел")
+    bpmn_xml = models.TextField("XML-содержимое схемы")
+    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Создано пользователем")
+
+    def __str__(self):
+        return self.name

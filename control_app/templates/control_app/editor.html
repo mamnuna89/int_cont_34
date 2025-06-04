@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>BPMN Редактор</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #canvas {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .form-block {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select, input[type="text"] {
+            width: 300px;
+            padding: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-weight: bold;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <script src="{% static 'bpmn/bpmn-modeler.development.js' %}"></script>
+</head>
+<body>
+
+<h1>✏️ Редактор схем бизнес-процесса</h1>
+
+<div class="form-block">
+    <label for="name">Название схемы:</label>
+    <input type="text" id="name" name="name" required>
+</div>
+
+<div class="form-block">
+    <label for="department">Департамент:</label>
+    <select id="department" name="department_id" required>
+        <option value="">-- Выберите департамент --</option>
+        {% for dept in departments %}
+            <option value="{{ dept.id }}">{{ dept.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="form-block">
+    <label for="division">Отдел:</label>
+    <select id="division" name="division_id" required>
+        <option value="">-- Сначала выберите департамент --</option>
+    </select>
+</div>
+
+<div id="canvas"></div>
+
+<button onclick="saveDiagram()">💾 Сохранить схему</button>
+
+<script>
+    const bpmnModeler = new BpmnJS({
+        container: '#canvas',
+        keyboard: { bindTo: window }
+    });
+
+    const defaultDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_1"
+                  targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1"/>
+    <bpmn:task id="Task_1" name="Анализ заявки"/>
+    <bpmn:exclusiveGateway id="Gateway_1"/>
+    <bpmn:task id="Task_2" name="Принятие решения"/>
+    <bpmn:endEvent id="EndEvent_1"/>
+
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Gateway_1"/>
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Gateway_1" targetRef="Task_2"/>
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_2" targetRef="EndEvent_1"/>
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="100" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
+        <dc:Bounds x="200" y="90" width="100" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1_di" bpmnElement="Gateway_1" isMarkerVisible="true">
+        <dc:Bounds x="340" y="105" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
+        <dc:Bounds x="430" y="90" width="120" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="600" y="100" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="136" y="118"/>
+        <di:waypoint x="200" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="300" y="130"/>
+        <di:waypoint x="340" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="390" y="130"/>
+        <di:waypoint x="430" y="130"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="550" y="130"/>
+        <di:waypoint x="600" y="118"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
+
+    bpmnModeler.importXML(defaultDiagram);
+
+    // справочник отделов по департаменту
+    const divisionsByDepartment = {
+        {% for dept in departments %}
+            {{ dept.id }}: [
+                {% for div in dept.divisions.all %}
+                    {id: {{ div.id }}, name: "{{ div.name }}"},
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+
+    // при выборе департамента — обновить отделы
+    document.getElementById('department').addEventListener('change', function () {
+        const deptId = this.value;
+        const divisionSelect = document.getElementById('division');
+        divisionSelect.innerHTML = '<option value="">-- Выберите отдел --</option>';
+        if (divisionsByDepartment[deptId]) {
+            divisionsByDepartment[deptId].forEach(function (div) {
+                const option = document.createElement('option');
+                option.value = div.id;
+                option.textContent = div.name;
+                divisionSelect.appendChild(option);
+            });
+        }
+    });
+
+    async function saveDiagram() {
+        const name = document.getElementById('name').value;
+        const departmentId = document.getElementById('department').value;
+        const divisionId = document.getElementById('division').value;
+
+        if (!name || !departmentId || !divisionId) {
+            alert("Заполните все поля!");
+            return;
+        }
+
+        const { xml } = await bpmnModeler.saveXML({ format: true });
+
+        fetch("{% url 'save_process_diagram' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: new URLSearchParams({
+                name: name,
+                department_id: departmentId,
+                division_id: divisionId,
+                bpmn_xml: xml
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert("✅ Схема успешно сохранена!");
+                window.location.href = "{% url 'diagram_list' %}";
+            } else {
+                alert("Ошибка при сохранении схемы.");
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека процессов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .department {
+            margin-bottom: 30px;
+        }
+        .department h2 {
+            color: #333;
+        }
+        .division {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        .diagram-card {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #f9f9f9;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+        }
+        .diagram-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .diagram-meta {
+            font-size: 12px;
+            color: #666;
+        }
+        .diagram-actions {
+            margin-top: 10px;
+        }
+        .diagram-actions a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>📚 Библиотека процессов</h1>
+
+    {% for department in departments %}
+        <div class="department">
+            <h2>📁 {{ department.name }}</h2>
+
+            {% for division in department.divisions.all %}
+                <div class="division">
+                    <h3>📂 {{ division.name }}</h3>
+
+                    {% for diagram in division.processdiagram_set.all %}
+                        <div class="diagram-card">
+                            <div class="diagram-title">{{ diagram.name }}</div>
+                            <div class="diagram-meta">
+                                Создано: {{ diagram.created_at|date:"d.m.Y H:i" }}<br>
+                                Автор: {{ diagram.created_by.username }}
+                            </div>
+                            <div class="diagram-actions">
+                                <a href="#">Открыть</a> <!-- Здесь можно вставить ссылку на редактор -->
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>Нет схем для этого отдела.</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    {% empty %}
+        <p>Нет данных о департаментах.</p>
+    {% endfor %}
+</body>
+</html>

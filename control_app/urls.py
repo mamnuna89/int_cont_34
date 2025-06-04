@@ -11,6 +11,10 @@ urlpatterns = [
     path('control-points/', views.control_point_list, name='control_point_list'),
     path('control-points/add/', views.control_point_create, name='control_point_create'),
     path('process-map/', process_map_overview, name='process_map_overview'),
+    path('diagrams/', views.diagram_list, name='diagram_list'),  # Библиотека схем
+    path('diagrams/save/', views.save_process_diagram, name='save_process_diagram'),  # Сохранение схемы из редактора
+    path('bpmn/editor/', views.editor_view, name='editor_bpmn'),
+
 ]
 
 
