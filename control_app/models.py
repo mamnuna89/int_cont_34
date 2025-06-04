@@ -8,7 +8,7 @@ class Department(models.Model):
         return self.name
 
 class Division(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
+    department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='divisions')
     name = models.CharField("Отдел", max_length=200)
 
     def __str__(self):
@@ -59,7 +59,8 @@ class ControlPoint(models.Model):
     implemented = models.BooleanField("Контроль внедрён", default=False)
 
     division = models.ForeignKey('Division', verbose_name="Отдел", on_delete=models.CASCADE, null=True, blank=True)
-    department = models.ForeignKey('Department', verbose_name="Департамент", on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='control_points')
+
 
     def save(self, *args, **kwargs):
         if self.division:

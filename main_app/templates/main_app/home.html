@@ -24,12 +24,18 @@
             font-weight: bold;
             margin-bottom: 5px;
         }
-        .module-links a {
+        .module-links a,
+        .module-links summary {
             display: block;
             margin-left: 15px;
             margin-bottom: 5px;
             text-decoration: none;
             color: #007bff;
+            cursor: pointer;
+        }
+        .module-links ul {
+            list-style: none;
+            padding-left: 25px;
         }
     </style>
 </head>
@@ -54,12 +60,18 @@
                 <a href="{% url 'control_risk_list' %}">Реестр рисков</a>
                 <a href="{% url 'control_point_create' %}">Добавить контрольную точку</a>
                 <a href="{% url 'control_point_list' %}">Реестр контрольных точек</a>
-                <a href="{% url 'bpmn_editor' %}">Редактор процессов (BPMN)</a> <!-- Новая ссылка -->
-                <a href="{% url 'department_structure' %}">Структура департаментов</a>
+
+                <!-- Выпадающий список: Карта процессов -->
+                <details>
+                    <summary>🗺 Карта процессов</summary>
+                    <ul>
+                        <li><a href="{% url 'process_map_overview' %}">Структура департаментов</a></li>
+                        <li><a href="{% url 'bpmn_editor' %}">Редактор процессов</a></li>
+                        <li><a href="{% url 'diagram_list' %}">Библиотека схем</a></li>
+                    </ul>
+                </details>
             </div>
         </div>
-
-        <!-- Здесь можно добавить другие модули позже -->
     </div>
 
     <div class="content">

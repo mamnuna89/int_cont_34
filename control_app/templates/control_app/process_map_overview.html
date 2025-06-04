@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карта процессов</title>
+    <style>
+        .department-block {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .department-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .division-list {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗺 Карта процессов по департаментам</h1>
+
+    {% for department in departments %}
+        <div class="department-block">
+            <div class="department-title">{{ department.name }}</div>
+            <ul class="division-list">
+                {% for division in department.divisions.all %}
+                    <li>
+                        {{ division.name }}
+                        <!-- Здесь позже добавим: [Посмотреть процессы] -->
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Карта процессов</title>
+</head>
+<body>
+    <h1>Структура по департаментам</h1>
+
+    {% for dept in departments %}
+        <div>
+            <h2>{{ dept.name }}</h2>
+            <ul>
+                {% for division in dept.divisions.all %}
+                    <li>{{ division.name }}</li>
+                {% empty %}
+                    <li><i>Нет отделов</i></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>
+

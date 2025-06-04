@@ -10,6 +10,7 @@ INSTALLED_APPS = [
     'risk_app',
     'control_app',
     'bpmn_app',
+    'process_map',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',

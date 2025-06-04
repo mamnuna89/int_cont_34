@@ -7,7 +7,7 @@ class Department(models.Model):
         return self.name
 
 class Division(models.Model):
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
+    department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='control_points', null=True, blank=True)
     name = models.CharField("Отдел", max_length=200)
 
     def __str__(self):
