@@ -1,0 +1,40 @@
+@import url('assets/bpmn-font/css/bpmn.css');
+
+.djs-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.djs-palette {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #f0f0f0;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.djs-palette .entry {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.djs-palette .entry:hover {
+  background: #e0e0e0;
+}
+
+.djs-container .djs-element {
+  font-family: "bpmn", sans-serif;
+}

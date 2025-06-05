@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>BPMN Редактор</title>
+    <link rel="stylesheet" href="{% static 'bpmn/assets/diagram-js.css' %}">
+<link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
+
 
     <style>
         body {
@@ -75,9 +78,10 @@
 
 <script>
     const bpmnModeler = new BpmnJS({
-        container: '#canvas',
-        keyboard: { bindTo: window }
-    });
+    container: '#canvas',
+    keyboard: { bindTo: window },
+});
+
 
     const defaultDiagram = `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'bpmn';
+  src: url('../fonts/bpmn.eot');
+  src: url('../fonts/bpmn.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/bpmn.woff2') format('woff2'),
+       url('../fonts/bpmn.woff') format('woff'),
+       url('../fonts/bpmn.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.bpmn-icon-start-event::before {
+  content: "\e800";
+}
+.bpmn-icon-end-event::before {
+  content: "\e801";
+}
+.bpmn-icon-task::before {
+  content: "\e802";
+}
+.bpmn-icon-gateway-xor::before {
+  content: "\e803";
+}
+.bpmn-icon-subprocess-expanded::before {
+  content: "\e804";
+}
+
+/* Дополнительно для иконок на палитре */
+[class^="bpmn-icon-"], [class*=" bpmn-icon-"] {
+  font-family: "bpmn";
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  font-size: 16px;
+}
+    
