@@ -4,6 +4,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'test'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 INSTALLED_APPS = [
     'main_app',

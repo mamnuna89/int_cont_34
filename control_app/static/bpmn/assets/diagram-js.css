@@ -1,40 +1,68 @@
-@import url('assets/bpmn-font/css/bpmn.css');
+@import url('bpmn-font/css/bpmn.css');
 
 .djs-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
-
 .djs-palette {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: #f0f0f0;
-  border-right: 1px solid #ccc;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 10;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #ffffff;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 230px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    z-index: 10;
+    overflow-y: auto;
+    max-height: 500px;
 }
 
 .djs-palette .entry {
-  width: 32px;
-  height: 32px;
-  background: #fff;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #f9f9f9;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+    transition: background 0.2s;
 }
 
 .djs-palette .entry:hover {
-  background: #e0e0e0;
+    background: #eaeaea;
 }
 
-.djs-container .djs-element {
-  font-family: "bpmn", sans-serif;
+.djs-palette .entry::after {
+    content: attr(data-title);
+    position: absolute;
+    top: 52px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: #333;
+    white-space: nowrap;
+}
+.bpmn-icon-task::before {
+    content: "\e800";
+    font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-start-event-none::before {
+    content: "\e801";
+    font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-gateway-xor::before {
+    content: "\e803";
+    font-family: 'bpmn-io-font';
 }

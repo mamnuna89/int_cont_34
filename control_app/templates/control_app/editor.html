@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>BPMN Редактор</title>
+
     <link rel="stylesheet" href="{% static 'bpmn/assets/diagram-js.css' %}">
-<link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
-
-
+    <link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
 
     <style>
         body {
@@ -16,7 +15,7 @@
         }
         #canvas {
             width: 100%;
-            height: 500px;
+            height: 600px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
         }
@@ -42,6 +41,33 @@
         }
         button:hover {
             background-color: #0056b3;
+        }
+
+        /* Палитра с иконками */
+        .djs-container .djs-palette {
+            display: grid !important;
+            grid-template-columns: repeat(2, 40px);
+            gap: 8px;
+            padding: 10px !important;
+            background: #f0f0f0;
+            border-right: 1px solid #ccc;
+        }
+
+        .djs-palette .entry {
+            width: 36px !important;
+            height: 36px !important;
+            background: #fff;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'bpmn-io-font', sans-serif;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .djs-palette .entry:hover {
+            background: #e0e0e0;
         }
     </style>
 
@@ -77,14 +103,16 @@
 
 <button onclick="saveDiagram()">💾 Сохранить схему</button>
 
-<script>
-    const bpmnModeler = new BpmnJS({
+<script type="module">
+    import BpmnJS from "{% static 'bpmn/bpmn-modeler.development.js' %}";
+    import customPaletteModule from "{% static 'bpmn/customPalette.js' %}";
+
+const bpmnModeler = new BpmnJS({
     container: '#canvas',
-    keyboard: { bindTo: window },
+    additionalModules: [ customPaletteModule ]
 });
 
-
-    const defaultDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+    const defaultDiagram = <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
@@ -92,61 +120,20 @@
                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
                   id="Definitions_1"
                   targetNamespace="http://bpmn.io/schema/bpmn">
-
   <bpmn:process id="Process_1" isExecutable="false">
     <bpmn:startEvent id="StartEvent_1"/>
-    <bpmn:task id="Task_1" name="Анализ заявки"/>
-    <bpmn:exclusiveGateway id="Gateway_1"/>
-    <bpmn:task id="Task_2" name="Принятие решения"/>
-    <bpmn:endEvent id="EndEvent_1"/>
-
-    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1"/>
-    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Gateway_1"/>
-    <bpmn:sequenceFlow id="Flow_3" sourceRef="Gateway_1" targetRef="Task_2"/>
-    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_2" targetRef="EndEvent_1"/>
   </bpmn:process>
-
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
       <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="100" y="100" width="36" height="36"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
-        <dc:Bounds x="200" y="90" width="100" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1_di" bpmnElement="Gateway_1" isMarkerVisible="true">
-        <dc:Bounds x="340" y="105" width="50" height="50"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
-        <dc:Bounds x="430" y="90" width="120" height="80"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
-        <dc:Bounds x="600" y="100" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-
-      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
-        <di:waypoint x="136" y="118"/>
-        <di:waypoint x="200" y="130"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
-        <di:waypoint x="300" y="130"/>
-        <di:waypoint x="340" y="130"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
-        <di:waypoint x="390" y="130"/>
-        <di:waypoint x="430" y="130"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
-        <di:waypoint x="550" y="130"/>
-        <di:waypoint x="600" y="118"/>
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn:definitions>`;
+</bpmn:definitions>;
 
-    bpmnModeler.importXML(defaultDiagram);
-
-    // справочник отделов по департаменту
+   bpmnModeler.importXML(defaultDiagram);
+</script>
     const divisionsByDepartment = {
         {% for dept in departments %}
             {{ dept.id }}: [
@@ -157,13 +144,13 @@
         {% endfor %}
     };
 
-    // при выборе департамента — обновить отделы
-    document.getElementById('department').addEventListener('change', function () {
+    document.getElementById('department').addEventListener('change', function() {
         const deptId = this.value;
         const divisionSelect = document.getElementById('division');
         divisionSelect.innerHTML = '<option value="">-- Выберите отдел --</option>';
+
         if (divisionsByDepartment[deptId]) {
-            divisionsByDepartment[deptId].forEach(function (div) {
+            divisionsByDepartment[deptId].forEach(function(div) {
                 const option = document.createElement('option');
                 option.value = div.id;
                 option.textContent = div.name;
