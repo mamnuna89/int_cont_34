@@ -5,4 +5,4 @@ class ControlAppConfig(AppConfig):
     name = 'control_app'
 
     def ready(self):
-        import control_app.translation  # ⬅️ подключаем файл переводов
+        import control_app.translation

@@ -1,13 +1,10 @@
-# control_app/translation.py
-
-from modeltranslation.translator import translator, TranslationOptions
+from modeltranslation.translator import register, TranslationOptions
 from .models import Department, Division
 
+@register(Department)
 class DepartmentTranslationOptions(TranslationOptions):
     fields = ('name',)
 
+@register(Division)
 class DivisionTranslationOptions(TranslationOptions):
     fields = ('name',)
-
-translator.register(Department, DepartmentTranslationOptions)
-translator.register(Division, DivisionTranslationOptions)
