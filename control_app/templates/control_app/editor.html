@@ -1,15 +1,13 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>BPMN Редактор</title>
+    <title>{% trans "BPMN Editor" %}</title>
 
     <link rel="stylesheet" href="{% static 'bpmn/assets/diagram-js.css' %}">
     <link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
-</head>
-
-
 
     <style>
         body {
@@ -46,7 +44,6 @@
             background-color: #0056b3;
         }
 
-        /* Палитра с иконками */
         .djs-container .djs-palette {
             display: grid !important;
             grid-template-columns: repeat(2, 40px);
@@ -78,17 +75,17 @@
 </head>
 <body>
 
-<h1>✏️ Редактор схем бизнес-процесса</h1>
+<h1>✏️ {% trans "Business Process Diagram Editor" %}</h1>
 
 <div class="form-block">
-    <label for="name">Название схемы:</label>
+    <label for="name">{% trans "Diagram Name" %}:</label>
     <input type="text" id="name" name="name" required>
 </div>
 
 <div class="form-block">
-    <label for="department">Департамент:</label>
+    <label for="department">{% trans "Department" %}:</label>
     <select id="department" name="department_id" required>
-        <option value="">-- Выберите департамент --</option>
+        <option value="">{% trans "-- Select Department --" %}</option>
         {% for dept in departments %}
             <option value="{{ dept.id }}">{{ dept.name }}</option>
         {% endfor %}
@@ -96,48 +93,49 @@
 </div>
 
 <div class="form-block">
-    <label for="division">Отдел:</label>
+    <label for="division">{% trans "Division" %}:</label>
     <select id="division" name="division_id" required>
-        <option value="">-- Сначала выберите департамент --</option>
+        <option value="">{% trans "-- First select a department --" %}</option>
     </select>
 </div>
 
 <div id="canvas"></div>
 
-<button onclick="saveDiagram()">💾 Сохранить схему</button>
+<button onclick="saveDiagram()">💾 {% trans "Save Diagram" %}</button>
 
 <script type="module">
   import BpmnJS from "{% static 'bpmn/assets/bpmn-modeler.development.js' %}";
   import customPaletteModule from "{% static 'bpmn/assets/customPalette.js' %}";
 
+  const bpmnModeler = new BpmnJS({
+      container: '#canvas',
+      additionalModules: [ customPaletteModule ]
+  });
 
-const bpmnModeler = new BpmnJS({
-    container: '#canvas',
-    additionalModules: [ customPaletteModule ]
-});
+  const defaultDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+  <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                    xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                    xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                    xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                    id="Definitions_1"
+                    targetNamespace="http://bpmn.io/schema/bpmn">
+    <bpmn:process id="Process_1" isExecutable="false">
+      <bpmn:startEvent id="StartEvent_1"/>
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+      <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+        <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+          <dc:Bounds x="100" y="100" width="36" height="36"/>
+        </bpmndi:BPMNShape>
+      </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+  </bpmn:definitions>`;
 
-    const defaultDiagram = <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-                  id="Definitions_1"
-                  targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn:process id="Process_1" isExecutable="false">
-    <bpmn:startEvent id="StartEvent_1"/>
-  </bpmn:process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-        <dc:Bounds x="100" y="100" width="36" height="36"/>
-      </bpmndi:BPMNShape>
-    </bpmndi:BPMNPlane>
-  </bpmndi:BPMNDiagram>
-</bpmn:definitions>;
-
-   bpmnModeler.importXML(defaultDiagram);
+  bpmnModeler.importXML(defaultDiagram);
 </script>
+
+<script>
     const divisionsByDepartment = {
         {% for dept in departments %}
             {{ dept.id }}: [
@@ -151,7 +149,7 @@ const bpmnModeler = new BpmnJS({
     document.getElementById('department').addEventListener('change', function() {
         const deptId = this.value;
         const divisionSelect = document.getElementById('division');
-        divisionSelect.innerHTML = '<option value="">-- Выберите отдел --</option>';
+        divisionSelect.innerHTML = '<option value="">{% trans "-- Select Division --" %}</option>';
 
         if (divisionsByDepartment[deptId]) {
             divisionsByDepartment[deptId].forEach(function(div) {
@@ -169,7 +167,7 @@ const bpmnModeler = new BpmnJS({
         const divisionId = document.getElementById('division').value;
 
         if (!name || !departmentId || !divisionId) {
-            alert("Заполните все поля!");
+            alert("{% trans 'Please fill in all fields!' %}");
             return;
         }
 
@@ -191,10 +189,10 @@ const bpmnModeler = new BpmnJS({
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                alert("✅ Схема успешно сохранена!");
+                alert("{% trans 'Diagram saved successfully!' %}");
                 window.location.href = "{% url 'diagram_list' %}";
             } else {
-                alert("Ошибка при сохранении схемы.");
+                alert("{% trans 'Error saving diagram.' %}");
             }
         });
     }

@@ -1,8 +1,9 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <meta charset="UTF-8">
-  <title>Добавить контрольную точку</title>
+  <title>{% trans "Add Control Point" %}</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -49,7 +50,7 @@
 </head>
 <body>
 
-  <h2>Добавить контрольную точку</h2>
+  <h2>{% trans "Add Control Point" %}</h2>
 
   <form method="post">
     {% csrf_token %}
@@ -63,9 +64,8 @@
       {% endif %}
     {% endfor %}
 
-    <button type="submit">Сохранить</button>
+    <button type="submit">{% trans "Save" %}</button>
   </form>
 
 </body>
 </html>
-

@@ -1,15 +1,19 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>Добавить риск</title>
+    <meta charset="UTF-8">
+    <title>{% trans "Add Risk" %}</title>
 </head>
 <body>
-    <h1>Добавить риск</h1>
+    <h1>{% trans "Add Risk" %}</h1>
+
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Сохранить</button>
+        <button type="submit">{% trans "Save" %}</button>
     </form>
-    <a href="{% url 'risk_list' %}">Назад к списку</a>
+
+    <a href="{% url 'risk_list' %}">{% trans "Back to list" %}</a>
 </body>
 </html>

@@ -1,18 +1,19 @@
 from django.db import models
 from datetime import datetime
+from django.utils.translation import gettext_lazy as _  # 👈 добавлен импорт
 
 class Risk(models.Model):
-    risk_code = models.CharField("Код риска", max_length=20, unique=True, blank=True)
-    name = models.CharField("Название", max_length=255)
-    risk_type = models.CharField("Тип риска", max_length=100)
-    source = models.CharField("Источник", max_length=255)
-    registered_at = models.DateField("Дата регистрации")
-    department = models.CharField("Подразделение", max_length=100)
-    owner = models.CharField("Владелец риска", max_length=100)
-    process = models.CharField("Процесс", max_length=255)
-    probability = models.IntegerField("Вероятность (1–5)")
-    impact = models.IntegerField("Воздействие (1–5)")
-    level = models.IntegerField("Уровень риска", blank=True, null=True)
+    risk_code = models.CharField(_("Risk Code"), max_length=20, unique=True, blank=True)
+    name = models.CharField(_("Name"), max_length=255)
+    risk_type = models.CharField(_("Risk Type"), max_length=100)
+    source = models.CharField(_("Source"), max_length=255)
+    registered_at = models.DateField(_("Registration Date"))
+    department = models.CharField(_("Department"), max_length=100)
+    owner = models.CharField(_("Owner"), max_length=100)
+    process = models.CharField(_("Process"), max_length=255)
+    probability = models.IntegerField(_("Probability (1–5)"))
+    impact = models.IntegerField(_("Impact (1–5)"))
+    level = models.IntegerField(_("Risk Level"), blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.risk_code:

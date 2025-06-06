@@ -1,32 +1,33 @@
 from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
 class Department(models.Model):
-    name = models.CharField("Департамент", max_length=200, unique=True)
+    name = models.CharField(_("Department"), max_length=200, unique=True)
 
     def __str__(self):
         return self.name
 
 class Division(models.Model):
     department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='divisions')
-    name = models.CharField("Отдел", max_length=200)
+    name = models.CharField(_("Division"), max_length=200)
 
     def __str__(self):
         return f"{self.department.name} – {self.name}"
 
 class Risk(models.Model):
-    risk_code = models.CharField("Код риска", max_length=20, unique=True, blank=True)
-    name = models.CharField("Название", max_length=255)
-    risk_type = models.CharField("Тип риска", max_length=100)
-    source = models.CharField("Источник", max_length=255)
-    registered_at = models.DateField("Дата регистрации")
-    department = models.CharField("Подразделение", max_length=100)
-    owner = models.CharField("Владелец риска", max_length=100)
-    process = models.CharField("Процесс", max_length=255)
-    probability = models.IntegerField("Вероятность (1–5)")
-    impact = models.IntegerField("Воздействие (1–5)")
-    level = models.IntegerField("Уровень риска", blank=True, null=True)
+    risk_code = models.CharField(_("Risk Code"), max_length=20, unique=True, blank=True)
+    name = models.CharField(_("Name"), max_length=255)
+    risk_type = models.CharField(_("Risk Type"), max_length=100)
+    source = models.CharField(_("Source"), max_length=255)
+    registered_at = models.DateField(_("Registration Date"))
+    department = models.CharField(_("Department"), max_length=100)
+    owner = models.CharField(_("Risk Owner"), max_length=100)
+    process = models.CharField(_("Process"), max_length=255)
+    probability = models.IntegerField(_("Probability (1–5)"))
+    impact = models.IntegerField(_("Impact (1–5)"))
+    level = models.IntegerField(_("Risk Level"), blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.risk_code:
@@ -41,27 +42,26 @@ class Risk(models.Model):
 
 class ControlPoint(models.Model):
     CONTROL_TYPE_CHOICES = [
-        ('preventive', 'Предотвращающий'),
-        ('detective', 'Обнаруживающий'),
+        ('preventive', _("Preventive")),
+        ('detective', _("Detective")),
     ]
 
     CONTROL_METHOD_CHOICES = [
-        ('manual', 'Ручной'),
-        ('automated', 'Автоматический'),
+        ('manual', _("Manual")),
+        ('automated', _("Automated")),
     ]
 
-    process = models.CharField("Процесс", max_length=255)
-    control_action = models.CharField("Контрольное действие", max_length=255)
-    control_procedure = models.TextField("Контрольная процедура")
-    control_type = models.CharField("Тип контроля", max_length=20, choices=CONTROL_TYPE_CHOICES)
-    frequency = models.CharField("Частота", max_length=100)
-    responsible_person = models.CharField("Ответственное лицо", max_length=100)
-    control_method = models.CharField("Метод контроля", max_length=20, choices=CONTROL_METHOD_CHOICES)
-    implemented = models.BooleanField("Контроль внедрён", default=False)
+    process = models.CharField(_("Process"), max_length=255)
+    control_action = models.CharField(_("Control Action"), max_length=255)
+    control_procedure = models.TextField(_("Control Procedure"))
+    control_type = models.CharField(_("Control Type"), max_length=20, choices=CONTROL_TYPE_CHOICES)
+    frequency = models.CharField(_("Frequency"), max_length=100)
+    responsible_person = models.CharField(_("Responsible Person"), max_length=100)
+    control_method = models.CharField(_("Control Method"), max_length=20, choices=CONTROL_METHOD_CHOICES)
+    implemented = models.BooleanField(_("Implemented"), default=False)
 
-    division = models.ForeignKey('Division', verbose_name="Отдел", on_delete=models.CASCADE, null=True, blank=True)
+    division = models.ForeignKey('Division', verbose_name=_("Division"), on_delete=models.CASCADE, null=True, blank=True)
     department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='control_points')
-
 
     def save(self, *args, **kwargs):
         if self.division:
@@ -72,12 +72,12 @@ class ControlPoint(models.Model):
         return f"{self.process} — {self.control_action}"
 
 class ProcessDiagram(models.Model):
-    name = models.CharField("Название схемы", max_length=255)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name="Департамент")
-    division = models.ForeignKey(Division, on_delete=models.CASCADE, verbose_name="Отдел")
-    bpmn_xml = models.TextField("XML-содержимое схемы")
-    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Создано пользователем")
+    name = models.CharField(_("Diagram Name"), max_length=255)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_("Department"))
+    division = models.ForeignKey(Division, on_delete=models.CASCADE, verbose_name=_("Division"))
+    bpmn_xml = models.TextField(_("BPMN XML Content"))
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_("Created By"))
 
     def __str__(self):
         return self.name

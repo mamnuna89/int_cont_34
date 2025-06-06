@@ -1,8 +1,9 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>Карта процессов</title>
+    <title>{% trans "Process Map" %}</title>
     <style>
         .department-block {
             border: 1px solid #ccc;
@@ -21,7 +22,7 @@
     </style>
 </head>
 <body>
-    <h1>🗺 Карта процессов по департаментам</h1>
+    <h1>🗺 {% trans "Process Map by Departments" %}</h1>
 
     {% for department in departments %}
         <div class="department-block">
@@ -30,7 +31,7 @@
                 {% for division in department.divisions.all %}
                     <li>
                         {{ division.name }}
-                        <!-- Здесь позже добавим: [Посмотреть процессы] -->
+                        <!-- {% trans "View Processes" %} (добавим позже) -->
                     </li>
                 {% endfor %}
             </ul>

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 from .models import Department, Division
 
 class DivisionInline(admin.TabularInline):
@@ -6,6 +7,10 @@ class DivisionInline(admin.TabularInline):
     extra = 1
 
 @admin.register(Department)
-class DepartmentAdmin(admin.ModelAdmin):
+class DepartmentAdmin(TranslationAdmin):  # ⬅️ используем TranslationAdmin
     inlines = [DivisionInline]
     list_display = ['name']
+
+@admin.register(Division)
+class DivisionAdmin(TranslationAdmin):  # ⬅️ обязательно для Division тоже
+    list_display = ['name', 'department']

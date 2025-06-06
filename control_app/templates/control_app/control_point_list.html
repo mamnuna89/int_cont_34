@@ -1,39 +1,39 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>Контрольные точки</title>
+    <title>{% trans "Control Points" %}</title>
 </head>
 <body>
-    <h1>Контрольные точки</h1>
+    <h1>{% trans "Control Points" %}</h1>
 
-   <form method="get">
-    <label for="department">Фильтр по департаменту:</label>
-    <select name="department" id="department" onchange="this.form.submit()">
-        <option value="">-- Все департаменты --</option>
-        {% for dep in departments %}
-            <option value="{{ dep.name }}" {% if dep.name == selected_department %}selected{% endif %}>
-                {{ dep.name }}
-            </option>
-        {% endfor %}
-    </select>
-</form>
+    <form method="get">
+        <label for="department">{% trans "Filter by Department" %}:</label>
+        <select name="department" id="department" onchange="this.form.submit()">
+            <option value="">{% trans "-- All Departments --" %}</option>
+            {% for dep in departments %}
+                <option value="{{ dep.name }}" {% if dep.name == selected_department %}selected{% endif %}>
+                    {{ dep.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
 
-<br>
-
+    <br>
 
     <!-- 📋 Таблица контрольных точек -->
     <table border="1">
         <thead>
             <tr>
-                <th>Процесс</th>
-                <th>Контрольное действие</th>
-                <th>Контрольная процедура</th>
-                <th>Тип контроля</th>
-                <th>Частота</th>
-                <th>Ответственный</th>
-                <th>Метод</th>
-                <th>Контроль внедрён</th>
+                <th>{% trans "Process" %}</th>
+                <th>{% trans "Control Action" %}</th>
+                <th>{% trans "Control Procedure" %}</th>
+                <th>{% trans "Control Type" %}</th>
+                <th>{% trans "Frequency" %}</th>
+                <th>{% trans "Responsible Person" %}</th>
+                <th>{% trans "Control Method" %}</th>
+                <th>{% trans "Implemented" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -46,15 +46,15 @@
                     <td>{{ point.frequency }}</td>
                     <td>{{ point.responsible_person }}</td>
                     <td>{{ point.get_control_method_display }}</td>
-                    <td>{% if point.implemented %}Да{% else %}Нет{% endif %}</td>
+                    <td>{% if point.implemented %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
                 </tr>
             {% empty %}
-                <tr><td colspan="8">Нет данных</td></tr>
+                <tr><td colspan="8">{% trans "No data available" %}</td></tr>
             {% endfor %}
         </tbody>
     </table>
 
     <br>
-    <a href="{% url 'control_point_create' %}">➕ Добавить контрольную точку</a>
+    <a href="{% url 'control_point_create' %}">➕ {% trans "Add Control Point" %}</a>
 </body>
 </html>

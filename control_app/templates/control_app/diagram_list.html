@@ -1,8 +1,9 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>Библиотека процессов</title>
+    <title>{% trans "Process Library" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,7 +47,7 @@
     </style>
 </head>
 <body>
-    <h1>📚 Библиотека процессов</h1>
+    <h1>📚 {% trans "Process Library" %}</h1>
 
     {% for department in departments %}
         <div class="department">
@@ -60,21 +61,21 @@
                         <div class="diagram-card">
                             <div class="diagram-title">{{ diagram.name }}</div>
                             <div class="diagram-meta">
-                                Создано: {{ diagram.created_at|date:"d.m.Y H:i" }}<br>
-                                Автор: {{ diagram.created_by.username }}
+                                {% trans "Created on" %}: {{ diagram.created_at|date:"d.m.Y H:i" }}<br>
+                                {% trans "Author" %}: {{ diagram.created_by.username }}
                             </div>
                             <div class="diagram-actions">
-                                <a href="#">Открыть</a> <!-- Здесь можно вставить ссылку на редактор -->
+                                <a href="#">{% trans "Open" %}</a>
                             </div>
                         </div>
                     {% empty %}
-                        <p>Нет схем для этого отдела.</p>
+                        <p>{% trans "No diagrams for this division." %}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
         </div>
     {% empty %}
-        <p>Нет данных о департаментах.</p>
+        <p>{% trans "No department data available." %}</p>
     {% endfor %}
 </body>
 </html>

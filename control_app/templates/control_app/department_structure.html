@@ -1,9 +1,9 @@
-<!-- templates/control_app/department_structure.html -->
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>Структура департаментов</title>
+    <title>{% trans "Department Structure" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-    <h1>Структура департаментов</h1>
+    <h1>{% trans "Department Structure" %}</h1>
     {% for department in departments %}
         <div class="department">
             <strong>{{ department.name }}</strong>

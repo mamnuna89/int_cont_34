@@ -1,6 +1,7 @@
-<h1>Создание риска (Внутренний контроль)</h1>
+{% load i18n %}
+<h1>{% trans "Create Risk (Internal Control)" %}</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Сохранить</button>
+    <button type="submit">{% trans "Save" %}</button>
 </form>

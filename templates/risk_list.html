@@ -1,25 +1,28 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
-    <title>Реестр рисков</title>
+    <meta charset="UTF-8">
+    <title>{% trans "Risk Register" %}</title>
 </head>
 <body>
-    <h1>Реестр рисков</h1>
+    <h1>{% trans "Risk Register" %}</h1>
+
     <table border="1">
         <thead>
             <tr>
-                <th>№</th>
-                <th>Код риска</th>
-                <th>Название</th>
-                <th>Тип</th>
-                <th>Источник</th>
-                <th>Дата регистрации</th>
-                <th>Подразделение</th>
-                <th>Владелец</th>
-                <th>Процесс</th>
-                <th>Вероятность</th>
-                <th>Воздействие</th>
-                <th>Уровень риска</th>
+                <th>{% trans "№" %}</th>
+                <th>{% trans "Risk Code" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Source" %}</th>
+                <th>{% trans "Registration Date" %}</th>
+                <th>{% trans "Department" %}</th>
+                <th>{% trans "Owner" %}</th>
+                <th>{% trans "Process" %}</th>
+                <th>{% trans "Probability" %}</th>
+                <th>{% trans "Impact" %}</th>
+                <th>{% trans "Risk Level" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -41,6 +44,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'risk_create' %}">Добавить новый риск</a>
+
+    <a href="{% url 'risk_create' %}">{% trans "Add New Risk" %}</a>
 </body>
 </html>
