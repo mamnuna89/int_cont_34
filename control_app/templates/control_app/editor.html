@@ -6,7 +6,10 @@
     <title>BPMN Редактор</title>
 
     <link rel="stylesheet" href="{% static 'bpmn/assets/diagram-js.css' %}">
-<link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
+    <link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
+</head>
+
+
 
     <style>
         body {
@@ -104,8 +107,9 @@
 <button onclick="saveDiagram()">💾 Сохранить схему</button>
 
 <script type="module">
-    import BpmnJS from "{% static 'bpmn/bpmn-modeler.development.js' %}";
-    import customPaletteModule from "{% static 'bpmn/customPalette.js' %}";
+  import BpmnJS from "{% static 'bpmn/assets/bpmn-modeler.development.js' %}";
+  import customPaletteModule from "{% static 'bpmn/assets/customPalette.js' %}";
+
 
 const bpmnModeler = new BpmnJS({
     container: '#canvas',
