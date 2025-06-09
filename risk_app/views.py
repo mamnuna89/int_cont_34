@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Risk
 from .forms import RiskForm
 
@@ -14,26 +14,41 @@ def risk_create(request):
         form = RiskForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('risk_list')
+            return redirect('risk_app:risk_list')
     else:
         form = RiskForm()
-    return render(request, 'risk_form.html', {'form': form})
+    return render(request, 'risk_form.html', {'form': form, 'risk': None})
 
-def risk_matrix_view(request):
-    risks = Risk.objects.all()
+def risk_detail(request, risk_id):
+    risk = get_object_or_404(Risk, id=risk_id)
 
-    # Создаём матрицу 5x5: impact (1–5) — строки, probability (1–5) — столбцы
-    matrix = {impact: {prob: [] for prob in range(1, 6)} for impact in range(1, 6)}
+    if request.method == 'POST':
+        form = RiskForm(request.POST, instance=risk)
+        if form.is_valid():
+            form.save()
+            return redirect('risk_app:risk_list')
+    else:
+        form = RiskForm(instance=risk)
 
-    for risk in risks:
-        i = risk.impact
-        p = risk.probability
-        matrix[i][p].append(risk)
+    return render(request, 'risk_app/risk_detail.html', {'form': form, 'risk': risk})
 
-    context = {
-        'matrix': matrix,
-    }
-    return render(request, 'risk_app/risk_matrix.html', context)
+def risk_delete(request, risk_id):
+    risk = get_object_or_404(Risk, id=risk_id)
+    if request.method == 'POST':
+        risk.delete()
+        return redirect('risk_app:risk_list')
+    return redirect('risk_app:risk_detail', risk_id=risk.id)
+
+def risk_update(request, pk):
+    risk = get_object_or_404(Risk, pk=pk)
+    if request.method == 'POST':
+        form = RiskForm(request.POST, instance=risk)
+        if form.is_valid():
+            form.save()
+            return redirect('risk_app:risk_list')
+    else:
+        form = RiskForm(instance=risk)
+    return render(request, 'risk_app/risk_update.html', {'form': form, 'risk': risk})
 
 def risk_matrix_view(request):
     department_filter = request.GET.get('department', '')
