@@ -3,10 +3,10 @@
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
-    <title>{% trans "Add Risk" %}</title>
+    <title>{% if risk.id %}{% trans "Edit Risk" %}{% else %}{% trans "Add Risk" %}{% endif %}</title>
 </head>
 <body>
-    <h1>{% trans "Add Risk" %}</h1>
+    <h1>{% if risk.id %}{% trans "Edit Risk" %}{% else %}{% trans "Add Risk" %}{% endif %}</h1>
 
     <form method="post">
         {% csrf_token %}
@@ -14,6 +14,14 @@
         <button type="submit">{% trans "Save" %}</button>
     </form>
 
-    <a href="{% url 'risk_list' %}">{% trans "Back to list" %}</a>
+    {% if risk.id %}
+    <!-- Удаление риска -->
+    <form method="post" action="{% url 'risk_app:risk_delete' risk.id %}" onsubmit="return confirm('Are you sure you want to delete this risk?');">
+        {% csrf_token %}
+        <button type="submit">{% trans "Delete Risk" %}</button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'risk_app:risk_list' %}">{% trans "Back to list" %}</a>
 </body>
 </html>

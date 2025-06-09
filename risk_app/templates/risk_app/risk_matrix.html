@@ -1,0 +1,115 @@
+{% load i18n custom_filters %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Risk Matrix" %}</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #999;
+            text-align: center;
+            padding: 8px;
+            vertical-align: top;
+        }
+        .low {
+            background-color: #b6fcb6;
+        }
+        .medium {
+            background-color: #fff3b0;
+        }
+        .high {
+            background-color: #f7b0b0;
+        }
+        .cell-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .risk-entry {
+            margin-bottom: 5px;
+        }
+        .export-buttons {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .export-buttons button {
+            margin-right: 10px;
+            padding: 6px 12px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>{% trans "Risk Matrix" %}</h1>
+
+<form method="get" style="margin-bottom: 20px;">
+    <label for="department">{% trans "Department" %}:</label>
+    <select name="department" id="department">
+        <option value="">{% trans "All" %}</option>
+        {% for dept in departments %}
+            <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>{{ dept }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="process">{% trans "Process" %}:</label>
+    <select name="process" id="process">
+        <option value="">{% trans "All" %}</option>
+        {% for proc in processes %}
+            <option value="{{ proc }}" {% if proc == selected_process %}selected{% endif %}>{{ proc }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">{% trans "Filter" %}</button>
+</form>
+
+<div class="export-buttons">
+    <button disabled>{% trans "Export to PNG" %}</button>
+    <button disabled>{% trans "Export to Excel" %}</button>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Impact" %} ↓ / {% trans "Probability" %} →</th>
+            {% for prob in 1|to:6 %}
+                <th>{{ prob }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for impact in 1|to:6 reversed %}
+            <tr>
+                <th>{{ impact }}</th>
+                {% for prob in 1|to:6 %}
+                    {% with row=matrix|dict_get:impact %}
+                        {% with cell=row|dict_get:prob %}
+                            {% with level=prob|mul:impact %}
+                                {% if level <= 6 %}
+                                    {% with "low" as set_class %}
+                                        {% include "risk_app/partials/one_cell.html" %}
+                                    {% endwith %}
+                                {% elif level <= 14 %}
+                                    {% with "medium" as set_class %}
+                                        {% include "risk_app/partials/one_cell.html" %}
+                                    {% endwith %}
+                                {% else %}
+                                    {% with "high" as set_class %}
+                                        {% include "risk_app/partials/one_cell.html" %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% endwith %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>

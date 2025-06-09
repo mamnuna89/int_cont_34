@@ -44,13 +44,14 @@
     <div class="sidebar">
         <h2>{% trans "Modules" %}</h2>
 
-        <!-- Risk Management -->
+        <!-- ✅ Risk Management -->
         <div class="module">
-            <div class="module-title">{% trans "Risk Management" %}</div>
-            <div class="module-links">
-                <a href="{% url 'risk_create' %}">{% trans "Add Risk" %}</a>
-                <a href="{% url 'risk_list' %}">{% trans "Risk Register" %}</a>
-            </div>
+            <div class="module-title">📌 {% trans "Risk Management" %}</div>
+            <ul class="module-links">
+                <li><a href="{% url 'risk_app:risk_create' %}">{% trans "Add Risk" %}</a></li>
+                <li><a href="{% url 'risk_app:risk_list' %}">{% trans "Risk Register" %}</a></li>
+                <li><a href="{% url 'risk_app:risk_matrix' %}">{% trans "Risk Matrix" %}</a></li>
+            </ul>
         </div>
 
         <!-- Internal Control -->
@@ -80,14 +81,14 @@
         <p>{% trans "Please select a module on the left to begin." %}</p>
 
         <!-- Переключатель языка -->
-    <form action="{% url 'set_language' %}" method="post" style="margin-top: 20px;">
-        {% csrf_token %}
-        <label for="language-select">{% trans "Select language" %}:</label>
-        <select name="language" id="language-select" onchange="this.form.submit()">
-            <option value="ru" {% if LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
-            <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
-        </select>
-    </form>
+        <form action="{% url 'set_language' %}" method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <label for="language-select">{% trans "Select language" %}:</label>
+            <select name="language" id="language-select" onchange="this.form.submit()">
+                <option value="ru" {% if LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+                <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+            </select>
+        </form>
     </div>
 </body>
 </html>

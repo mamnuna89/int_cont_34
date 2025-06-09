@@ -1,0 +1,16 @@
+{% load i18n %}
+<td class="{{ set_class }}">
+    {% if cell %}
+        {% for risk in cell %}
+            <div class="risk-entry">
+                <span class="cell-title">{{ risk.name }}</span><br>
+                <small>
+                    <span>{% trans "Type" %}</span>: {{ risk.risk_type.name }}<br>
+                    <span>{% trans "Level" %}</span>: {{ risk.level }}
+                </small>
+            </div>
+        {% endfor %}
+    {% else %}
+        —
+    {% endif %}
+</td>
