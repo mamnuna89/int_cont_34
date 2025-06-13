@@ -243,6 +243,45 @@ msgstr "Нет схем для этого отдела."
 msgid "No department data available."
 msgstr "Нет данных о департаментах."
 
+#: main_app/templates/main_app/home.html
+msgid "Compliance Control"
+msgstr "Контроль соответствия"
+
+msgid "Compliance Checks"
+msgstr "Проверки соответствия"
+
+msgid "Affiliated Persons"
+msgstr "Аффилированные лица"
+
+msgid "Conflict Registry"
+msgstr "Реестр конфликтов интересов"
+
+msgid "Compliance Plan"
+msgstr "План по комплаенсу"
+
+msgid "Internal Audit"
+msgstr "Внутренний аудит"
+
+msgid "Audit Planning"
+msgstr "Планирование аудита"
+
+msgid "Audit Reports"
+msgstr "Отчёты по аудиту"
+
+msgid "Audit Actions"
+msgstr "Мероприятия по аудиту"
+
+msgid "Unified Action Plan"
+msgstr "Единый план действий"
+
+msgid "View Plan"
+msgstr "Просмотр плана"
+
+msgid "Deadlines Control"
+msgstr "Контроль сроков"
+
+msgid "Export Report"
+msgstr "Экспорт отчёта"
 
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"

@@ -1,115 +1,90 @@
+{% extends 'base.html' %}
 {% load i18n custom_filters %}
-{% get_current_language as LANGUAGE_CODE %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <title>{% trans "Risk Matrix" %}</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #999;
-            text-align: center;
-            padding: 8px;
-            vertical-align: top;
-        }
-        .low {
-            background-color: #b6fcb6;
-        }
-        .medium {
-            background-color: #fff3b0;
-        }
-        .high {
-            background-color: #f7b0b0;
-        }
-        .cell-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .risk-entry {
-            margin-bottom: 5px;
-        }
-        .export-buttons {
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .export-buttons button {
-            margin-right: 10px;
-            padding: 6px 12px;
-        }
-    </style>
-</head>
-<body>
 
-<h1>{% trans "Risk Matrix" %}</h1>
+{% block content %}
+<style>
+    .risk-low {
+        background-color: #b6fcb6;
+    }
+    .risk-medium {
+        background-color: #fff3b0;
+    }
+    .risk-high {
+        background-color: #f7b0b0;
+    }
+</style>
 
-<form method="get" style="margin-bottom: 20px;">
-    <label for="department">{% trans "Department" %}:</label>
-    <select name="department" id="department">
-        <option value="">{% trans "All" %}</option>
-        {% for dept in departments %}
-            <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>{{ dept }}</option>
-        {% endfor %}
-    </select>
+<div class="container max-w-6xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold mb-6 text-center">{% trans "Risk Matrix (COSO)" %}</h2>
 
-    <label for="process">{% trans "Process" %}:</label>
-    <select name="process" id="process">
-        <option value="">{% trans "All" %}</option>
-        {% for proc in processes %}
-            <option value="{{ proc }}" {% if proc == selected_process %}selected{% endif %}>{{ proc }}</option>
-        {% endfor %}
-    </select>
-
-    <button type="submit">{% trans "Filter" %}</button>
-</form>
-
-<div class="export-buttons">
-    <button disabled>{% trans "Export to PNG" %}</button>
-    <button disabled>{% trans "Export to Excel" %}</button>
-</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>{% trans "Impact" %} ↓ / {% trans "Probability" %} →</th>
-            {% for prob in 1|to:6 %}
-                <th>{{ prob }}</th>
+    <form method="get" class="mb-4" style="text-align: center;">
+        <label for="department" class="mr-2">{% trans "Department" %}:</label>
+        <select name="department" id="department">
+            <option value="">{% trans "All" %}</option>
+            {% for dept in departments %}
+                <option value="{{ dept }}" {% if dept == selected_department %}selected{% endif %}>{{ dept }}</option>
             {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for impact in 1|to:6 reversed %}
+        </select>
+
+        <label for="process" class="ml-4 mr-2">{% trans "Process" %}:</label>
+        <select name="process" id="process">
+            <option value="">{% trans "All" %}</option>
+            {% for proc in processes %}
+                <option value="{{ proc }}" {% if proc == selected_process %}selected{% endif %}>{{ proc }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" value="{% trans 'Filter' %}">
+    </form>
+
+    <div class="text-center mb-4">
+        <button disabled>{% trans "Export to PNG" %}</button>
+        <button disabled>{% trans "Export to Excel" %}</button>
+    </div>
+
+    <table>
+        <thead>
             <tr>
-                <th>{{ impact }}</th>
+                <th>{% trans "Impact ↓ / Probability →" %}</th>
                 {% for prob in 1|to:6 %}
-                    {% with row=matrix|dict_get:impact %}
-                        {% with cell=row|dict_get:prob %}
-                            {% with level=prob|mul:impact %}
-                                {% if level <= 6 %}
-                                    {% with "low" as set_class %}
-                                        {% include "risk_app/partials/one_cell.html" %}
-                                    {% endwith %}
-                                {% elif level <= 14 %}
-                                    {% with "medium" as set_class %}
-                                        {% include "risk_app/partials/one_cell.html" %}
-                                    {% endwith %}
-                                {% else %}
-                                    {% with "high" as set_class %}
-                                        {% include "risk_app/partials/one_cell.html" %}
-                                    {% endwith %}
-                                {% endif %}
-                            {% endwith %}
-                        {% endwith %}
-                    {% endwith %}
+                    <th>{{ prob }}</th>
                 {% endfor %}
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-</body>
-</html>
+        </thead>
+        <tbody>
+            {% for impact in 1|to:6 reversed %}
+                <tr>
+                    <th>{{ impact }}</th>
+                    {% for prob in 1|to:6 %}
+                        {% with row=matrix|dict_get:impact %}
+                            {% with cell=row|dict_get:prob %}
+                                {% with level=prob|mul:impact %}
+                                    <td class="
+                                        {% if level <= 6 %}
+                                            risk-low
+                                        {% elif level <= 14 %}
+                                            risk-medium
+                                        {% else %}
+                                            risk-high
+                                        {% endif %}
+                                    ">
+                                        {% for risk in cell %}
+                                            <div class="risk-entry">
+                                                <a href="{% url 'risk_app:risk_detail' risk.id %}">
+                                                    {{ risk.name }} ({{ risk.level }})
+                                                </a>
+                                            </div>
+                                        {% empty %}
+                                            <span style="color: #aaa;">—</span>
+                                        {% endfor %}
+                                    </td>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

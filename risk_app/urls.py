@@ -10,4 +10,5 @@ urlpatterns = [
     path('risk/<int:pk>/edit/', views.risk_update, name='risk_update'),
     path('risk/<int:risk_id>/delete/', views.risk_delete, name='risk_delete'),  # 🗑 Удаление
     path('risk/matrix/', views.risk_matrix_view, name='risk_matrix'),
+    path('risk/export_excel/', views.export_risks_to_excel, name='export_risks_excel'),
 ]
