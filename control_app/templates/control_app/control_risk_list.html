@@ -1,65 +1,146 @@
+{% extends 'main_app/home.html' %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <title>{% trans "Risk Register (Internal Control)" %}</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
 
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
+{% block body_class %}green{% endblock %}
 
-        .green { background-color: #d4edda; }
-        .yellow { background-color: #fff3cd; }
-        .red { background-color: #f8d7da; }
-        .gray { background-color: #e2e3e5; }
-    </style>
-</head>
-<body>
-    <h1>{% trans "Risk Register (Internal Control)" %}</h1>
+{% block content %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>{% trans "Code" %}</th>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Risk Type" %}</th>
-                <th>{% trans "Source" %}</th>
-                <th>{% trans "Registration Date" %}</th>
-                <th>{% trans "Department" %}</th>
-                <th>{% trans "Risk Owner" %}</th>
-                <th>{% trans "Process" %}</th>
-                <th>{% trans "Probability" %}</th>
-                <th>{% trans "Impact" %}</th>
-                <th>{% trans "Risk Level" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for risk in risks %}
-            <tr class="{{ risk.color }}">
-                <td>{{ risk.risk_code }}</td>
-                <td>{{ risk.name }}</td>
-                <td>{{ risk.risk_type }}</td>
-                <td>{{ risk.source }}</td>
-                <td>{{ risk.registered_at }}</td>
-                <td>{{ risk.department }}</td>
-                <td>{{ risk.owner }}</td>
-                <td>{{ risk.process }}</td>
-                <td>{{ risk.probability }}</td>
-                <td>{{ risk.impact }}</td>
-                <td>{{ risk.level }}</td>
-            </tr>
+
+<style>
+    .risk-low {
+        background-color: #b6fcb6;
+    }
+    .risk-medium {
+        background-color: #fff3b0;
+    }
+    .risk-high {
+        background-color: #f7b0b0;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-right: 6px;
+    }
+    .btn-primary {
+        background-color: #003366;
+        color: white;
+    }
+    .btn-secondary {
+        background-color: #aaa;
+        color: white;
+    }
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+    .btn-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+    .btn-outline-secondary {
+        background-color: transparent;
+        border: 1px solid #aaa;
+        color: #555;
+    }
+    .btn-sm {
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+    .top-buttons {
+        margin-bottom: 20px;
+    }
+    .filter-form {
+        margin-bottom: 20px;
+    }
+    .form-select, .form-control {
+        padding: 5px;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+</style>
+
+<h2 style="margin-bottom: 20px;">{% trans "Risk Register (Internal Control)" %}</h2>
+
+<div class="top-buttons">
+    <a href="{% url 'control_risk_create' %}" class="btn btn-primary">{% trans "Add New Risk" %}</a>
+    <a href="{% url 'control_export_risks_excel' %}" class="btn btn-secondary">{% trans "Export to Excel" %}</a>
+</div>
+
+<form method="get" class="filter-form">
+    <label>{% trans "Department" %}:
+        <select name="department" class="form-select">
+            <option value="">{% trans "All" %}</option>
+            {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if dept.id|stringformat:"s" == selected_department %}selected{% endif %}>
+                    {{ dept.name }}
+                </option>
             {% endfor %}
-        </tbody>
-    </table>
+        </select>
+    </label>
 
-    <br>
-    <a href="{% url 'control_risk_create' %}">➕ {% trans "Add Risk" %}</a>
-</body>
-</html>
+    <label>{% trans "Process" %}:
+        <input type="text" name="process" value="{{ selected_process }}" class="form-control">
+    </label>
+
+    <button type="submit" class="btn btn-success">{% trans "Filter" %}</button>
+    <a href="{% url 'control_risk_list' %}" class="btn btn-outline-secondary">{% trans "Reset" %}</a>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "№" %}</th>
+            <th>{% trans "Risk Code" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "Source" %}</th>
+            <th>{% trans "Registration Date" %}</th>
+            <th>{% trans "Department" %}</th>
+            <th>{% trans "Owner" %}</th>
+            <th>{% trans "Process" %}</th>
+            <th>{% trans "Probability" %}</th>
+            <th>{% trans "Impact" %}</th>
+            <th>{% trans "Risk Level" %}</th>
+            <th>{% trans "Actions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for risk in risks %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ risk.risk_code }}</td>
+            <td>{{ risk.name }}</td>
+            <td>{{ risk.risk_type }}</td>
+            <td>{{ risk.source }}</td>
+            <td>{{ risk.registered_at }}</td>
+            <td>{{ risk.department }}</td>
+            <td>{{ risk.owner }}</td>
+            <td>{{ risk.process }}</td>
+            <td>{{ risk.probability }}</td>
+            <td>{{ risk.impact }}</td>
+            <td class="{% if risk.level <= 6 %}risk-low{% elif risk.level <= 14 %}risk-medium{% else %}risk-high{% endif %}">
+                {{ risk.level }}
+            </td>
+            <td>
+                <a href="{% url 'control_risk_edit' risk.id %}" class="btn btn-sm btn-warning">{% trans "Edit" %}</a>
+                <form action="{% url 'control_risk_delete' risk.id %}" method="post" style="display:inline;" onsubmit="return confirm('{% trans "Are you sure you want to delete this risk?" %}');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger">{% trans "Delete" %}</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="13" style="text-align: center; color: #777;">{% trans "No risks found." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

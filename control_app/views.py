@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 
 from .models import Risk, ControlPoint, Department, Division, ProcessDiagram
 from .forms import RiskForm, ControlPointForm
 
-
+import openpyxl
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 
 # 👉 Главная страница модуля внутреннего контроля
 def control_index(request):
     return render(request, 'control_app/control_index.html')
+
 
 # 👉 Отображение списка рисков
 def risk_list(request):
@@ -43,7 +46,10 @@ def risk_list(request):
         else:
             risk.color = 'gray'
 
-    return render(request, 'control_app/control_risk_list.html', {'risks': risks})
+    return render(request, 'control_app/control_risk_list.html', {
+        'risks': risks,
+        'hide_sidebar': True  # ✅ вот это обязательно!
+    })
 
 # 👉 Создание нового риска
 def risk_create(request):
@@ -51,10 +57,68 @@ def risk_create(request):
         form = RiskForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('control_risk_list')  # исправлено на правильный redirect
+            return redirect('control_risk_list')
     else:
         form = RiskForm()
-    return render(request, 'control_app/control_risk_form.html', {'form': form})
+    return render(request, 'control_app/control_risk_form.html', {
+        'form': form,
+        'hide_sidebar': True  # 👈 переменная для скрытия сайдбара
+    })
+
+# 👉 Редактирование риска
+def risk_edit(request, risk_id):
+    risk = get_object_or_404(Risk, id=risk_id)
+    if request.method == 'POST':
+        form = RiskForm(request.POST, instance=risk)
+        if form.is_valid():
+            form.save()
+            return redirect('control_risk_list')
+    else:
+        form = RiskForm(instance=risk)
+    return render(request, 'control_app/control_risk_form.html', {'form': form, 'risk': risk})
+
+
+# 👉 Удаление риска
+@require_POST
+def risk_delete(request, pk):
+    risk = get_object_or_404(Risk, pk=pk)
+    risk.delete()
+    return redirect('control_risk_list')
+
+
+# 👉 Экспорт рисков в Excel
+def export_risks_excel(request):
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Risks"
+
+    ws.append(['№', 'Code', 'Name', 'Type', 'Source', 'Registration Date', 'Department',
+               'Owner', 'Process', 'Probability', 'Impact', 'Level'])
+
+    risks = Risk.objects.all()
+    for i, risk in enumerate(risks, start=1):
+        ws.append([
+            i,
+            risk.risk_code,
+            risk.name,
+            risk.risk_type,
+            risk.source,
+            risk.registered_at.strftime('%Y-%m-%d') if risk.registered_at else '',
+            str(risk.department),
+            risk.owner,
+            risk.process,
+            risk.probability,
+            risk.impact,
+            risk.level
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=internal_control_risks.xlsx'
+    wb.save(response)
+    return response
+
 
 # 👉 Создание контрольной точки
 def control_point_create(request):
@@ -67,8 +131,8 @@ def control_point_create(request):
         form = ControlPointForm()
     return render(request, 'control_app/control_point_form.html', {'form': form})
 
-from .models import Department  # убедись, что импорт есть
 
+# 👉 Список контрольных точек
 def control_point_list(request):
     selected_department = request.GET.get('department')
 
@@ -77,7 +141,7 @@ def control_point_list(request):
     else:
         control_points = ControlPoint.objects.all()
 
-    departments = Department.objects.all()  # 🔄 для фильтра
+    departments = Department.objects.all()
 
     return render(request, 'control_app/control_point_list.html', {
         'control_points': control_points,
@@ -86,19 +150,23 @@ def control_point_list(request):
     })
 
 
+# 👉 Структура департаментов
 def department_structure(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/department_structure.html', {'departments': departments})
 
+
+# 👉 Обзор карты процессов
 def process_map_overview(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/process_map_overview.html', {'departments': departments})
 
+
+# 👉 Список схем процессов
 def diagram_list(request):
     departments = Department.objects.prefetch_related('divisions__processdiagram_set')
-    return render(request, 'control_app/diagram_list.html', {
-        'departments': departments
-    })
+    return render(request, 'control_app/diagram_list.html', {'departments': departments})
+
 
 # 👉 Сохранение схемы из редактора
 @require_POST
@@ -119,6 +187,47 @@ def save_process_diagram(request):
         created_by=request.user
     )
     return JsonResponse({'status': 'success', 'diagram_id': diagram.id})
+
+
+# 👉 Редактор процессов
 def editor_view(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/editor.html', {'departments': departments})
+
+def control_export_risks_excel(request):
+    risks = Risk.objects.all()
+
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = "Internal Control Risks"
+
+    headers = [
+        '№', 'Code', 'Name', 'Risk Type', 'Source',
+        'Registration Date', 'Department', 'Owner',
+        'Process', 'Probability', 'Impact', 'Risk Level'
+    ]
+    sheet.append(headers)
+
+    for idx, risk in enumerate(risks, start=1):
+        sheet.append([
+            idx,
+            risk.risk_code,
+            risk.name,
+            risk.risk_type,
+            risk.source,
+            risk.registered_at.strftime('%Y-%m-%d') if risk.registered_at else '',
+            str(risk.department),
+            risk.owner,
+            risk.process,
+            risk.probability,
+            risk.impact,
+            risk.level
+        ])
+
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=internal_control_risks.xlsx'
+    workbook.save(response)
+    return response
+

@@ -1,19 +1,26 @@
-{% load i18n %}
+{% load i18n static %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <title>{% trans "Internal Control System" %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex">
 
+<body class="{% block body_class %}green{% endblock %} bg-gray-100 min-h-screen">
+
+<!-- Верхняя шапка -->
+{% if request.path != '/' and request.path != '/en/' and request.path != '/ru/' %}
+    <header class="text-white p-4">
+        <h1 class="text-xl font-bold">{% trans "Internal Control System" %}</h1>
+    </header>
+{% endif %}
+
+
+<div class="flex">
     <!-- Sidebar -->
+     {% if not hide_sidebar %}
     <aside class="w-72 bg-white border-r border-gray-200 p-6 shadow-md">
         <h2 class="text-xl font-bold mb-6 text-blue-800">{% trans "Modules" %}</h2>
 
@@ -78,24 +85,32 @@
         </div>
 
         <!-- Language Switcher -->
-<form action="{% url 'set_language' %}" method="post" style="margin-top: 20px;">
-    {% csrf_token %}
-    <label for="language-select" class="block text-sm font-medium text-gray-700 mb-1">
-        {% trans "Select language" %}:
-    </label>
-    <select name="language" id="language-select" onchange="this.form.submit()"
-            class="form-select border border-gray-300 rounded px-2 py-1 text-sm">
-        <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
-        <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
-    </select>
-</form>
+        <form action="{% url 'set_language' %}" method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <label for="language-select" class="block text-sm font-medium text-gray-700 mb-1">
+                {% trans "Select language" %}:
+            </label>
+            <select name="language" id="language-select" onchange="this.form.submit()"
+                    class="form-select border border-gray-300 rounded px-2 py-1 text-sm">
+                <option value="ru" {% if request.LANGUAGE_CODE == 'ru' %}selected{% endif %}>Русский</option>
+                <option value="en" {% if request.LANGUAGE_CODE == 'en' %}selected{% endif %}>English</option>
+            </select>
+        </form>
     </aside>
+{% endif %}
 
     <!-- Main Content -->
     <main class="flex-1 p-10">
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">{% trans "Welcome to the Bank's Internal Control System" %}</h1>
-        <p class="text-gray-600 text-sm">{% trans "Please select a module on the left to begin." %}</p>
+        {% block content %}
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">
+            {% trans "Welcome to the Bank's Internal Control System" %}
+        </h1>
+        <p class="text-gray-600 text-sm">
+            {% trans "Please select a module on the left to begin." %}
+        </p>
+        {% endblock %}
     </main>
+</div>
 
 </body>
 </html>

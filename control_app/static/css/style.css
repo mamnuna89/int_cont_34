@@ -1,0 +1,124 @@
+input, select, textarea {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-save {
+    background-color: #059669; /* зелёная кнопка */
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #047857;
+}
+
+.btn-back {
+    margin-left: 10px;
+    color: #1d4ed8;
+}
+
+/* Убираем отступы у body — layout управляется через Tailwind */
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Цвет заголовков для других модулей */
+body.blue h1 {
+    color: steelblue;
+}
+
+/* Стандартные кнопки */
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007BFF;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Топ-кнопки (Add, Export) */
+.top-buttons {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Таблицы */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+/* Шапка для модуля Внутренний контроль */
+body.green header {
+    background-color: #047857;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок внутри шапки */
+body.green header h1 {
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Кнопка фильтра */
+button[type="submit"], .btn-filter {
+    background-color: #059669;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover, .btn-filter:hover {
+    background-color: #047857;
+}
+
+button[type="reset"] {
+    background-color: #e5e7eb;
+    color: #111827;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}

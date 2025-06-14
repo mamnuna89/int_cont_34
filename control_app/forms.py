@@ -1,8 +1,13 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from .models import Risk, ControlPoint
+from .models import Risk, ControlPoint, Department
 
 class RiskForm(forms.ModelForm):
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        empty_label=_("Select Department"),
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
     class Meta:
         model = Risk
         fields = [
