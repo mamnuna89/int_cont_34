@@ -8,6 +8,7 @@ class RiskForm(forms.ModelForm):
         empty_label=_("Select Department"),
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
     class Meta:
         model = Risk
         fields = [
@@ -25,6 +26,7 @@ class RiskForm(forms.ModelForm):
             'probability': _('Probability'),
             'impact': _('Impact'),
         }
+
 
 class ControlPointForm(forms.ModelForm):
     class Meta:
@@ -61,3 +63,20 @@ class ControlPointForm(forms.ModelForm):
                 ('automated', _('Automated')),
             ]),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        process = cleaned_data.get('process')
+        control_action = cleaned_data.get('control_action')
+        control_procedure = cleaned_data.get('control_procedure')
+        division = cleaned_data.get('division')
+
+        if ControlPoint.objects.filter(
+            process=process,
+            control_action=control_action,
+            control_procedure=control_procedure,
+            division=division
+        ).exists():
+            raise forms.ValidationError(
+                _("A control point with the same process, action, procedure and division already exists.")
+            )
