@@ -5,7 +5,9 @@ from .views import (
     process_map_overview,
     control_export_risks_excel,
 )
-
+from .views import export_control_points_excel
+from .views import control_point_edit
+from .views import control_point_delete
 urlpatterns = [
     path('', views.control_index, name='control_index'),
     path('structure/', department_structure, name='department_structure'),
@@ -28,4 +30,7 @@ urlpatterns = [
 
     # 👉 Экспорт
     path('control/export/', control_export_risks_excel, name='control_export_risks_excel'),
+    path('control-points/export/', export_control_points_excel, name='export_control_points_excel'),
+     path('control-points/edit/<int:pk>/', control_point_edit, name='control_point_edit'),
+     path('control-points/delete/<int:pk>/', control_point_delete, name='control_point_delete'),
 ]

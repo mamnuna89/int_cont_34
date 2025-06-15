@@ -1,60 +1,98 @@
-{% load i18n %}
+{% load i18n static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <title>{% trans "Control Points" %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1>{% trans "Control Points" %}</h1>
+    <h1 class="text-2xl font-bold text-green-800 mb-6">{% trans "Control Points" %}</h1>
 
-    <form method="get">
-        <label for="department">{% trans "Filter by Department" %}:</label>
-        <select name="department" id="department" onchange="this.form.submit()">
-            <option value="">{% trans "-- All Departments --" %}</option>
-            {% for dep in departments %}
-                <option value="{{ dep.name }}" {% if dep.name == selected_department %}selected{% endif %}>
-                    {{ dep.name }}
-                </option>
-            {% endfor %}
-        </select>
+    <div class="top-buttons">
+    <a href="{% url 'control_point_create' %}" class="btn btn-primary">
+        {% trans "Add New Control Point" %}
+    </a>
+    <a href="{% url 'export_control_points_excel' %}" class="btn btn-secondary">
+        {% trans "Export to Excel" %}
+    </a>
+</div>
+
+
+    <form method="get" class="mb-6 flex items-center space-x-4">
+        <div>
+            <label for="department" class="text-sm font-medium">{% trans "Department:" %}</label>
+            <select name="department" id="department" onchange="this.form.submit()" class="form-select border-gray-300 rounded px-2 py-1">
+                <option value="">{% trans "All" %}</option>
+                {% for dep in departments %}
+                    <option value="{{ dep.name }}" {% if dep.name == selected_department %}selected{% endif %}>
+                        {{ dep.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="process" class="text-sm font-medium">{% trans "Process:" %}</label>
+            <input type="text" name="process" value="{{ selected_process }}" placeholder="{% trans 'Enter process name' %}"
+                   class="form-input border border-gray-300 rounded px-2 py-1" />
+        </div>
+        <button type="submit" class="bg-green-700 text-white px-3 py-1 rounded text-sm font-medium hover:bg-green-800">
+            {% trans "Filter" %}
+        </button>
+        <a href="{% url 'control_point_list' %}" class="text-sm text-gray-600 hover:underline mt-5">
+            {% trans "Reset" %}
+        </a>
     </form>
 
-    <br>
-
-    <!-- 📋 Таблица контрольных точек -->
-    <table border="1">
-        <thead>
+    <table class="w-full text-sm border border-collapse border-gray-300 bg-white shadow">
+        <thead class="bg-gray-100">
             <tr>
-                <th>{% trans "Process" %}</th>
-                <th>{% trans "Control Action" %}</th>
-                <th>{% trans "Control Procedure" %}</th>
-                <th>{% trans "Control Type" %}</th>
-                <th>{% trans "Frequency" %}</th>
-                <th>{% trans "Responsible Person" %}</th>
-                <th>{% trans "Control Method" %}</th>
-                <th>{% trans "Implemented" %}</th>
+                <th class="border px-2 py-2">{% trans "Process" %}</th>
+                <th class="border px-2 py-2">{% trans "Control Action" %}</th>
+                <th class="border px-2 py-2">{% trans "Control Procedure" %}</th>
+                <th class="border px-2 py-2">{% trans "Control Type" %}</th>
+                <th class="border px-2 py-2">{% trans "Frequency" %}</th>
+                <th class="border px-2 py-2">{% trans "Responsible Person" %}</th>
+                <th class="border px-2 py-2">{% trans "Control Method" %}</th>
+                <th class="border px-2 py-2">{% trans "Implemented" %}</th>
+                <th class="border px-2 py-2">{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for point in control_points %}
-                <tr>
-                    <td>{{ point.process }}</td>
-                    <td>{{ point.control_action }}</td>
-                    <td>{{ point.control_procedure }}</td>
-                    <td>{{ point.get_control_type_display }}</td>
-                    <td>{{ point.frequency }}</td>
-                    <td>{{ point.responsible_person }}</td>
-                    <td>{{ point.get_control_method_display }}</td>
-                    <td>{% if point.implemented %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</td>
-                </tr>
+            <tr>
+                <td class="border px-2 py-1">{{ point.process }}</td>
+                <td class="border px-2 py-1">{{ point.control_action }}</td>
+                <td class="border px-2 py-1">{{ point.control_procedure }}</td>
+                <td class="border px-2 py-1">{{ point.get_control_type_display }}</td>
+                <td class="border px-2 py-1">{{ point.frequency }}</td>
+                <td class="border px-2 py-1">{{ point.responsible_person }}</td>
+                <td class="border px-2 py-1">{{ point.get_control_method_display }}</td>
+                <td class="border px-2 py-1">
+                    {% if point.implemented %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}
+                </td>
+<td class="border px-2 py-1 space-x-2 text-center">
+    <a href="{% url 'control_point_edit' point.pk %}" class="btn-edit">
+        {% trans "Edit" %}
+    </a>
+
+    <form method="post" action="{% url 'control_point_delete' point.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn-delete"
+                onclick="return confirm('{% trans 'Are you sure you want to delete this control point?' %}')">
+            {% trans "Delete" %}
+        </button>
+    </form>
+</td>
+
+            </tr>
             {% empty %}
-                <tr><td colspan="8">{% trans "No data available" %}</td></tr>
+            <tr>
+                <td colspan="9" class="text-center text-gray-500 py-3">{% trans "No data available" %}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <br>
-    <a href="{% url 'control_point_create' %}">➕ {% trans "Add Control Point" %}</a>
 </body>
 </html>
