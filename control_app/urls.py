@@ -4,12 +4,15 @@ from .views import (
     department_structure,
     process_map_overview,
     control_export_risks_excel,
+    export_control_points_excel,
+    control_point_edit,
+    control_point_delete,
 )
-from .views import export_control_points_excel
-from .views import control_point_edit
-from .views import control_point_delete
+
 urlpatterns = [
     path('', views.control_index, name='control_index'),
+
+    # 👉 Структура департаментов
     path('structure/', department_structure, name='department_structure'),
 
     # 👉 Реестр рисков
@@ -21,6 +24,8 @@ urlpatterns = [
     # 👉 Контрольные точки
     path('control-points/', views.control_point_list, name='control_point_list'),
     path('control-points/add/', views.control_point_create, name='control_point_create'),
+    path('control-points/edit/<int:pk>/', control_point_edit, name='control_point_edit'),
+    path('control-points/delete/<int:pk>/', control_point_delete, name='control_point_delete'),
 
     # 👉 Карта процессов и редактор
     path('process-map/', process_map_overview, name='process_map_overview'),
@@ -31,6 +36,7 @@ urlpatterns = [
     # 👉 Экспорт
     path('control/export/', control_export_risks_excel, name='control_export_risks_excel'),
     path('control-points/export/', export_control_points_excel, name='export_control_points_excel'),
-     path('control-points/edit/<int:pk>/', control_point_edit, name='control_point_edit'),
-     path('control-points/delete/<int:pk>/', control_point_delete, name='control_point_delete'),
+
+    # 👉 AJAX для динамической подгрузки рисков
+    path('ajax/get-risks-by-process/', views.get_risks_by_process, name='get_risks_by_process'),
 ]

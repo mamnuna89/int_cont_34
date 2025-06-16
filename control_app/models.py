@@ -52,6 +52,14 @@ class ControlPoint(models.Model):
     ]
 
     process = models.CharField(_("Process"), max_length=255)
+    related_risk = models.ForeignKey(
+        Risk,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="linked_control_points",
+        verbose_name=_("Related Risk")
+    )
     control_action = models.CharField(_("Control Action"), max_length=255)
     control_procedure = models.TextField(_("Control Procedure"))
     control_type = models.CharField(_("Control Type"), max_length=20, choices=CONTROL_TYPE_CHOICES)
@@ -70,6 +78,14 @@ class ControlPoint(models.Model):
 
     def __str__(self):
         return f"{self.process} — {self.control_action}"
+
+    @property
+    def related_risk_code(self):
+        return self.related_risk.risk_code if self.related_risk else ""
+
+    @property
+    def related_risk_name(self):
+        return self.related_risk.name if self.related_risk else ""
 
 class ProcessDiagram(models.Model):
     name = models.CharField(_("Diagram Name"), max_length=255)

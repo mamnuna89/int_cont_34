@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Risk, ControlPoint, Department, Division, ProcessDiagram
 from .forms import RiskForm, ControlPointForm
@@ -258,6 +259,12 @@ def control_point_delete(request, pk):
     point.delete()
     return redirect('control_point_list')
 
+def get_risks_by_process(request):
+    process = request.GET.get('process')
+    risks = Risk.objects.filter(process__iexact=process)
+    data = [{'id': r.id, 'name': f"{r.risk_code} — {r.name}"} for r in risks]
+    return JsonResponse({'risks': data})
+
 # 👉 Экспорт точек контроля
 def export_control_points_excel(request):
     control_points = ControlPoint.objects.all()
@@ -267,7 +274,7 @@ def export_control_points_excel(request):
     sheet.title = "Control Points"
 
     headers = [
-        'Process', 'Control Action', 'Control Procedure',
+        'Process', 'Related Risk', 'Control Action', 'Control Procedure',
         'Control Type', 'Frequency', 'Responsible Person',
         'Control Method', 'Implemented'
     ]
@@ -276,6 +283,7 @@ def export_control_points_excel(request):
     for p in control_points:
         sheet.append([
             p.process,
+            f"{p.related_risk.risk_code} — {p.related_risk.name}" if p.related_risk else "",
             p.control_action,
             p.control_procedure,
             p.get_control_type_display(),

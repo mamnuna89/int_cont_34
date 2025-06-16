@@ -27,12 +27,12 @@ class RiskForm(forms.ModelForm):
             'impact': _('Impact'),
         }
 
-
 class ControlPointForm(forms.ModelForm):
     class Meta:
         model = ControlPoint
         fields = [
             'process',
+            'related_risk',
             'control_action',
             'control_procedure',
             'control_type',
@@ -44,6 +44,7 @@ class ControlPointForm(forms.ModelForm):
         ]
         labels = {
             'process': _('Process'),
+            'related_risk': _('Related Risk'),
             'control_action': _('Control Action'),
             'control_procedure': _('Control Procedure'),
             'control_type': _('Control Type'),
@@ -64,6 +65,17 @@ class ControlPointForm(forms.ModelForm):
             ]),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['related_risk'].queryset = Risk.objects.none()
+
+        if 'process' in self.data:
+            process_value = self.data.get('process')
+            if process_value:
+                self.fields['related_risk'].queryset = Risk.objects.filter(process__iexact=process_value)
+        elif self.instance.pk and self.instance.process:
+            self.fields['related_risk'].queryset = Risk.objects.filter(process__iexact=self.instance.process)
+
     def clean(self):
         cleaned_data = super().clean()
         process = cleaned_data.get('process')
@@ -76,7 +88,7 @@ class ControlPointForm(forms.ModelForm):
             control_action=control_action,
             control_procedure=control_procedure,
             division=division
-        ).exists():
+        ).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError(
                 _("A control point with the same process, action, procedure and division already exists.")
             )
