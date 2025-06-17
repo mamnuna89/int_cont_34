@@ -161,7 +161,7 @@ def save_process_diagram(request):
 # 👉 Редактор процессов
 def editor_view(request):
     departments = Department.objects.prefetch_related('divisions').all()
-    return render(request, 'control_app/editor.html', {
+    return render(request, 'bpmn_app/bpmn_editor.html', {
         'departments': departments,
         'hide_sidebar': True
     })

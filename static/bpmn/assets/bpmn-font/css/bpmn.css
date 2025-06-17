@@ -1,0 +1,55 @@
+
+@font-face {
+  font-family: 'bpmn-io-font';
+  src: url('../fonts/bpmn.woff2') format('woff2'),
+       url('../fonts/bpmn.woff') format('woff'),
+       url('../fonts/bpmn.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.bpmn-icon-task::before {
+  content: "\e821";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-start-event-none::before {
+  content: "\e845";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-end-event-none::before {
+  content: "\e84c";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-user-task::before {
+  content: "\e903";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-script-task::before {
+  content: "\e90e";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-gateway-xor::before {
+  content: "\e80f";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-gateway-parallel::before {
+  content: "\e810";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-subprocess-expanded::before {
+  content: "\e90c";
+  font-family: 'bpmn-io-font';
+}
+
+.bpmn-icon-text-annotation::before {
+  content: "\e916";
+  font-family: 'bpmn-io-font';
+}
+        

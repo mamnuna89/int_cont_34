@@ -6,19 +6,3 @@
   font-weight: normal;
   font-style: normal;
 }
-
-
-.bpmn-icon-task::before {
-  content: "\e821";
-  font-family: 'bpmn-io-font';
-}
-
-.bpmn-icon-start-event-none::before {
-  content: "\e845";
-  font-family: 'bpmn-io-font';
-}
-
-.bpmn-icon-gateway-xor::before {
-  content: "\e80f";
-  font-family: 'bpmn-io-font';
-}

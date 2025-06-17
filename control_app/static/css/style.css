@@ -163,3 +163,14 @@ button[type="reset"] {
 .btn-delete:hover {
     background-color: #047857;
 }
+
+.djs-container.djs-palette-open .djs-palette-toggle {
+  display: none !important;
+}
+
+
+
+
+
+
+
