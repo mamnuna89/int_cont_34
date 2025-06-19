@@ -1,7 +1,7 @@
 from django.db import models
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
 class Department(models.Model):
     name = models.CharField(_("Department"), max_length=200, unique=True)
@@ -10,7 +10,7 @@ class Department(models.Model):
         return self.name
 
 class Division(models.Model):
-    department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='divisions')
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
     name = models.CharField(_("Division"), max_length=200)
 
     def __str__(self):
@@ -41,25 +41,11 @@ class Risk(models.Model):
         return self.name
 
 class ControlPoint(models.Model):
-    CONTROL_TYPE_CHOICES = [
-        ('preventive', _("Preventive")),
-        ('detective', _("Detective")),
-    ]
-
-    CONTROL_METHOD_CHOICES = [
-        ('manual', _("Manual")),
-        ('automated', _("Automated")),
-    ]
+    CONTROL_TYPE_CHOICES = [('preventive', _("Preventive")), ('detective', _("Detective"))]
+    CONTROL_METHOD_CHOICES = [('manual', _("Manual")), ('automated', _("Automated"))]
 
     process = models.CharField(_("Process"), max_length=255)
-    related_risk = models.ForeignKey(
-        Risk,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="linked_control_points",
-        verbose_name=_("Related Risk")
-    )
+    related_risk = models.ForeignKey(Risk, on_delete=models.SET_NULL, null=True, blank=True, related_name="linked_control_points", verbose_name=_("Related Risk"))
     control_action = models.CharField(_("Control Action"), max_length=255)
     control_procedure = models.TextField(_("Control Procedure"))
     control_type = models.CharField(_("Control Type"), max_length=20, choices=CONTROL_TYPE_CHOICES)
@@ -67,9 +53,8 @@ class ControlPoint(models.Model):
     responsible_person = models.CharField(_("Responsible Person"), max_length=100)
     control_method = models.CharField(_("Control Method"), max_length=20, choices=CONTROL_METHOD_CHOICES)
     implemented = models.BooleanField(_("Implemented"), default=False)
-
-    division = models.ForeignKey('Division', verbose_name=_("Division"), on_delete=models.CASCADE, null=True, blank=True)
-    department = models.ForeignKey('Department', on_delete=models.CASCADE, related_name='control_points')
+    division = models.ForeignKey(Division, verbose_name=_("Division"), on_delete=models.CASCADE, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='control_points')
 
     def save(self, *args, **kwargs):
         if self.division:

@@ -14,7 +14,6 @@ INSTALLED_APPS = [
     'risk_app',
     'modeltranslation',
     'control_app.apps.ControlAppConfig',
-    'bpmn_app',
     'process_map',
     'rest_framework',
     'django.contrib.admin',

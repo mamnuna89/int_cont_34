@@ -15,5 +15,6 @@ urlpatterns += i18n_patterns(
     path('', include('main_app.urls')),              # Главная страница
     path('risks/', include('risk_app.urls')),        # Управление рисками
     path('control/', include('control_app.urls')),   # Внутренний контроль
-    path('bpmn/editor/', control_views.editor_view, name='editor_bpmn'),
+    # Только редактор используется из control_app
+path('bpmn/editor/', control_views.editor_view, name='editor_bpmn'),
 )
