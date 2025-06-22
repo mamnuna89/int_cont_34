@@ -1,12 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseRedirect
-from django.urls import path, reverse
-
-
+from django.urls import reverse
 
 from .models import Risk, ControlPoint, Department, Division, ProcessDiagram
 from .forms import RiskForm, ControlPointForm
@@ -134,9 +130,6 @@ def process_map_overview(request):
         'hide_sidebar': True
     })
 
-# 👉 Список схем процессов
-
-
 # 👉 Список всех диаграмм
 def diagram_list(request):
     departments = Department.objects.prefetch_related('divisions__processdiagram_set')
@@ -184,12 +177,24 @@ def diagram_view(request, diagram_id):
 # 👉 Редактирование схемы
 def edit_diagram(request, diagram_id):
     diagram = get_object_or_404(ProcessDiagram, id=diagram_id)
+
+    if request.method == 'POST':
+        # Обновляем существующую схему
+        diagram.name = request.POST.get('name')
+        diagram.department_id = request.POST.get('department_id')
+        diagram.division_id = request.POST.get('division_id')
+        diagram.bpmn_xml = request.POST.get('bpmn_xml')
+        diagram.save()
+
+        return JsonResponse({'status': 'success'})
+
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/bpmn_editor.html', {
-        'diagram': diagram,
         'departments': departments,
+        'diagram': diagram,
         'hide_sidebar': True
     })
+
 
 # 👉 Удаление схемы
 @require_POST
@@ -198,37 +203,8 @@ def delete_diagram(request, diagram_id):
     diagram.delete()
     return HttpResponseRedirect(reverse('diagram_list'))
 
-
-
-# 👉 Сохранение схемы из редактора
-@require_POST
-def save_process_diagram(request):
-    name = request.POST.get('name')
-    department_id = request.POST.get('department_id')
-    division_id = request.POST.get('division_id')
-    bpmn_xml = request.POST.get('bpmn_xml')
-
-    department = Department.objects.get(id=department_id)
-    division = Division.objects.get(id=division_id)
-
-    diagram = ProcessDiagram.objects.create(
-        name=name,
-        department=department,
-        division=division,
-        bpmn_xml=bpmn_xml,
-        created_by=request.user
-    )
-    return JsonResponse({'status': 'success', 'diagram_id': diagram.id})
-
-# 👉 Редактор процессов
-def editor_view(request):
-    departments = Department.objects.prefetch_related('divisions').all()
-    return render(request, 'control_app/bpmn_editor.html', {
-        'departments': departments,
-        'hide_sidebar': True
-    })
-
 # 👉 Экспорт всех рисков
+
 def control_export_risks_excel(request):
     risks = Risk.objects.all()
 
@@ -321,6 +297,7 @@ def control_point_delete(request, pk):
     point.delete()
     return redirect('control_point_list')
 
+# 👉 Получение рисков по процессу
 def get_risks_by_process(request):
     process = request.GET.get('process')
     risks = Risk.objects.filter(process__iexact=process)

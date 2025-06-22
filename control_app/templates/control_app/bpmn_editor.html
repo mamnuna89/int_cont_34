@@ -10,104 +10,23 @@
     <link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/font-face.css' %}">
     <link rel="stylesheet" href="{% static 'bpmn/assets/bpmn-font/css/bpmn.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
 
-    <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
-    }
-
-    #canvas {
-        width: 100%;
-        height: 600px;
-        border: 1px solid #ccc;
-        margin-bottom: 20px;
-    }
-
-    .form-block {
-        margin-bottom: 15px;
-    }
-
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    select, input[type="text"] {
-        width: 300px;
-        padding: 5px;
-    }
-
-    button {
-        padding: 10px 20px;
-        font-weight: bold;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Кастомная палитра */
-    .djs-container .djs-palette {
-        background: #f9f9f9;
-        border-right: 1px solid #ccc;
-        padding: 10px;
-    }
-
-    .djs-palette-entries {
-        display: grid !important;
-        grid-template-columns: repeat(2, 40px);
-        gap: 8px;
-    }
-
-    .djs-palette .entry {
-        width: 36px;
-        height: 36px;
-        background: #fff;
-        border: 1px solid #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'bpmn-io-font', sans-serif;
-        font-size: 18px;
-        cursor: pointer;
-    }
-
-    .djs-palette .entry:hover {
-        background: #e0e0e0;
-    }
-
-    .djs-palette .djs-palette-toggle,
-    .djs-palette .separator,
-    .djs-palette-entries .entry:empty {
-        display: none !important;
-    }
-
-    .djs-palette-toggle {
-    display: none !important;
-}
-
-</style>
-
-
-    <script src="{% static 'bpmn/assets/bpmn-modeler.development.js' %}"></script>
     <script src="{% static 'bpmn/assets/customPalette_fixed.js' %}"></script>
-
+    <script src="{% static 'bpmn/assets/customContextPad.js' %}"></script>
+    <script src="{% static 'bpmn/assets/bpmn-modeler.development.js' %}"></script>
 
 </head>
 <body>
 
-<h1>✏️ {% trans "Business Process Diagram Editor" %}</h1>
+<h1 class="text-2xl font-bold text-green-800 mb-6">✏️ {% trans "Business Process Diagram Editor" %}</h1>
+
+{% if diagram %}
+    <input type="hidden" id="diagram_id" value="{{ diagram.id }}">
+{% endif %}
 
 <div class="form-block">
     <label for="name">{% trans "Diagram Name" %}:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="name" required value="{{ diagram.name|default:'' }}">
 </div>
 
 <div class="form-block">
@@ -115,7 +34,7 @@
     <select id="department" name="department_id" required>
         <option value="">{% trans "-- Select Department --" %}</option>
         {% for dept in departments %}
-            <option value="{{ dept.id }}">{{ dept.name }}</option>
+            <option value="{{ dept.id }}" {% if diagram.division.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
         {% endfor %}
     </select>
 </div>
@@ -123,20 +42,30 @@
 <div class="form-block">
     <label for="division">{% trans "Division" %}:</label>
     <select id="division" name="division_id" required>
-        <option value="">{% trans "-- First select a department --" %}</option>
+        {% if diagram %}
+            {% for div in diagram.division.department.divisions.all %}
+                <option value="{{ div.id }}" {% if div.id == diagram.division.id %}selected{% endif %}>{{ div.name }}</option>
+            {% endfor %}
+        {% else %}
+            <option value="">{% trans "-- First select a department --" %}</option>
+        {% endif %}
     </select>
 </div>
 
-<div class="entry bpmn-icon-start-event-none" style="font-size: 30px;"></div>
+<div id="canvas" style="width: 100%; height: 600px; border: 1px solid #ccc; margin-bottom: 20px;"></div>
 
-<div id="canvas"></div>
-
-<button onclick="saveDiagram()">💾 {% trans "Save Diagram" %}</button>
+<button onclick="saveDiagram()" class="btn btn-save">💾 {% trans "Save Diagram" %}</button>
 
 <script>
     const bpmnModeler = new BpmnJS({
-    container: '#canvas',
-    additionalModules: [window.customPaletteModule]
+  container: '#canvas',
+  additionalModules: [
+    window.customPaletteModule,
+    window.customContextPadModule
+  ],
+  keyboard: {
+    bindTo: document
+  }
 });
 
 
@@ -160,9 +89,9 @@
       </bpmndi:BPMNDiagram>
     </bpmn:definitions>`;
 
-    bpmnModeler.importXML(defaultDiagram);
+    const diagramXML = `{% if diagram %}{{ diagram.bpmn_xml|escapejs }}{% else %}{{ default_diagram|default:'' }}{% endif %}`;
+    bpmnModeler.importXML(diagramXML || defaultDiagram);
 </script>
-
 
 <script>
     const divisionsByDepartment = {
@@ -175,13 +104,12 @@
         {% endfor %}
     };
 
-    document.getElementById('department').addEventListener('change', function() {
+    document.getElementById('department').addEventListener('change', function () {
         const deptId = this.value;
         const divisionSelect = document.getElementById('division');
         divisionSelect.innerHTML = '<option value="">{% trans "-- Select Division --" %}</option>';
-
         if (divisionsByDepartment[deptId]) {
-            divisionsByDepartment[deptId].forEach(function(div) {
+            divisionsByDepartment[deptId].forEach(function (div) {
                 const option = document.createElement('option');
                 option.value = div.id;
                 option.textContent = div.name;
@@ -194,6 +122,7 @@
         const name = document.getElementById('name').value;
         const departmentId = document.getElementById('department').value;
         const divisionId = document.getElementById('division').value;
+        const diagramId = document.getElementById('diagram_id')?.value;
 
         if (!name || !departmentId || !divisionId) {
             alert("{% trans 'Please fill in all fields!' %}");
@@ -202,7 +131,11 @@
 
         const { xml } = await bpmnModeler.saveXML({ format: true });
 
-        fetch("{% url 'save_process_diagram' %}", {
+        const url = diagramId
+            ? `{% url 'edit_diagram' 99999 %}`.replace('99999', diagramId)
+            : `{% url 'save_process_diagram' %}`;
+
+        fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
@@ -225,7 +158,7 @@
             }
         });
     }
-</script>
 
+</script>
 </body>
 </html>

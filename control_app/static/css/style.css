@@ -1,3 +1,80 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#canvas {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.form-block {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+select, input[type="text"] {
+    width: 300px;
+    padding: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    font-weight: bold;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* BPMN кастомная палитра */
+.djs-container .djs-palette {
+    background: #f9f9f9;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+}
+
+.djs-palette-entries {
+    display: grid !important;
+    grid-template-columns: repeat(2, 40px);
+    gap: 8px;
+}
+
+.djs-palette .entry {
+    width: 36px;
+    height: 36px;
+    background: #fff;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'bpmn-io-font', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.djs-palette .entry:hover {
+    background: #e0e0e0;
+}
+
+.djs-palette .djs-palette-toggle,
+.djs-palette .separator,
+.djs-palette-entries .entry:empty,
+.djs-palette-toggle {
+    display: none !important;
+}
+
 input, select, textarea {
     width: 100%;
     padding: 6px;
