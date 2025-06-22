@@ -57,3 +57,7 @@
   content: "\e84f";
   font-family: 'bpmn-io-font';
 }
+.bpmn-icon-participant::before {
+  content: "\e90c";
+  font-family: 'bpmn-io-font';
+}

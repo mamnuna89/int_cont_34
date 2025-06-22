@@ -81,8 +81,18 @@ CustomPaletteProvider.prototype.getPaletteEntries = function () {
         dragstart: createShape('bpmn:TextAnnotation'),
         click: createShape('bpmn:TextAnnotation')
       }
+    },
+
+    'create.pool': {
+    group: 'structure',
+    className: 'bpmn-icon-participant',
+    title: 'Pool / Lane',
+    action: {
+      dragstart: createShape('bpmn:Participant', { isExpanded: true }),
+      click: createShape('bpmn:Participant', { isExpanded: true })
     }
-  };
+  }
+};
 };
 
 window.customPaletteModule = {
