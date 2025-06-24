@@ -283,6 +283,39 @@ msgstr "Контроль сроков"
 msgid "Export Report"
 msgstr "Экспорт отчёта"
 
+msgid "Реестр процессов"
+msgstr "Process Registry"
+
+msgid "Добавить процесс"
+msgstr "Add Process"
+
+msgid "Код"
+msgstr "Code"
+
+msgid "Название"
+msgstr "Name"
+
+msgid "Департамент"
+msgstr "Department"
+
+msgid "Отдел"
+msgstr "Division"
+
+msgid "Действия"
+msgstr "Actions"
+
+msgid "Вы действительно хотите удалить эту диаграмму?"
+msgstr "Are you sure you want to delete this diagram?"
+
+msgid "Открыть"
+msgstr "Open"
+
+msgid "Редактировать"
+msgstr "Edit"
+
+msgid "Удалить"
+msgstr "Delete"
+
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:16
 msgid "Messages"
 msgstr ""

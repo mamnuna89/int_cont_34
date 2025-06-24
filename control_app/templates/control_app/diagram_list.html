@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>{% trans "Process Library" %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
+</head>
 <body>
     <h1>📚 {% trans "Process Library" %}</h1>
 
@@ -20,8 +20,15 @@
                     <h3>📂 {{ division.name }}</h3>
 
                     {% for diagram in division.processdiagram_set.all %}
-                        <div class="diagram-card">
+                        <div class="diagram-card" id="diagram-{{ diagram.id }}">
                             <div class="diagram-title">{{ diagram.name }}</div>
+
+                            {% if diagram.code %}
+                                <div class="diagram-code">
+                                    📄 <strong>{% trans "Code" %}:</strong> {{ diagram.code }}
+                                </div>
+                            {% endif %}
+
                             <div class="diagram-meta">
                                 {% trans "Created on" %}: {{ diagram.created_at|date:"d.m.Y H:i" }}<br>
                                 {% trans "Author" %}: {{ diagram.created_by.username|default:"—" }}

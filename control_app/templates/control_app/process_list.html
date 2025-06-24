@@ -1,0 +1,54 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <title>🗂️ {% trans "Реестр процессов" %}</title>  {# 👉 #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container mx-auto px-6 py-8">
+        <h1 class="text-2xl font-bold text-green-800 mb-6">🗂️ {% trans "Реестр процессов" %}</h1> {# 👉 #}
+
+        <a href="{% url 'editor_bpmn' %}" class="btn btn-green mb-4">➕ {% trans "Добавить процесс" %}</a>  {# 👉 #}
+
+        <table class="table-auto w-full border border-gray-300 bg-white">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-4 py-2 border text-left">{% trans "Код" %}</th>         {# 👉 #}
+                    <th class="px-4 py-2 border text-left">{% trans "Название" %}</th>    {# 👉 #}
+                    <th class="px-4 py-2 border text-left">{% trans "Департамент" %}</th> {# 👉 #}
+                    <th class="px-4 py-2 border text-left">{% trans "Отдел" %}</th>       {# 👉 #}
+                    <th class="px-4 py-2 border text-left">{% trans "Действия" %}</th>    {# 👉 #}
+                </tr>
+            </thead>
+            <tbody>
+            {% for diagram in diagrams %}
+                <tr class="border-t">
+                    <td class="px-4 py-2 border">
+                    <a href="{% url 'diagram_list' %}#diagram-{{ diagram.id }}" class="text-blue-700 hover:underline">
+                     {{ diagram.code }}
+                    </a>
+                    </td>
+
+                    <td class="px-4 py-2 border">{{ diagram.name }}</td>
+                    <td class="px-4 py-2 border">{{ diagram.department.name }}</td>
+                    <td class="px-4 py-2 border">{{ diagram.division.name }}</td>
+                    <td class="px-4 py-2 border">
+                        <a href="{% url 'edit_diagram' diagram.id %}" class="btn btn-blue">✏️</a>
+                        <form action="{% url 'delete_diagram' diagram.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-red">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-gray-500 py-4">{% trans "Нет сохранённых процессов." %}</td>  {# 👉 #}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 
+
 class Department(models.Model):
     name = models.CharField(_("Department"), max_length=200, unique=True)
 
     def __str__(self):
         return self.name
+
 
 class Division(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='divisions')
@@ -15,6 +17,7 @@ class Division(models.Model):
 
     def __str__(self):
         return f"{self.department.name} – {self.name}"
+
 
 class Risk(models.Model):
     risk_code = models.CharField(_("Risk Code"), max_length=20, unique=True, blank=True)
@@ -39,6 +42,7 @@ class Risk(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class ControlPoint(models.Model):
     CONTROL_TYPE_CHOICES = [('preventive', _("Preventive")), ('detective', _("Detective"))]
@@ -72,13 +76,24 @@ class ControlPoint(models.Model):
     def related_risk_name(self):
         return self.related_risk.name if self.related_risk else ""
 
+
 class ProcessDiagram(models.Model):
-    name = models.CharField(_("Diagram Name"), max_length=255)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name=_("Department"))
-    division = models.ForeignKey(Division, on_delete=models.CASCADE, verbose_name=_("Division"))
-    bpmn_xml = models.TextField(_("BPMN XML Content"))
-    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name=_("Created By"))
+    name = models.CharField(max_length=255)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    division = models.ForeignKey(Division, on_delete=models.CASCADE)
+    bpmn_xml = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('auth.User', on_delete=models.SET_NULL, null=True, blank=True)
+
+    code = models.CharField(max_length=50, unique=True, editable=False, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.code:
+            # Безопасно получаем name_en или name
+            prefix = (self.department.name_en or self.department.name).upper().replace(' ', '')[:3]
+            existing = ProcessDiagram.objects.filter(code__startswith=prefix).count() + 1
+            self.code = f"{prefix}-{existing:03d}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.code})"

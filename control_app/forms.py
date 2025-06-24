@@ -1,6 +1,20 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from .models import Risk, ControlPoint, Department
+from .models import ProcessDiagram
+
+class ProcessDiagramForm(forms.ModelForm):
+    class Meta:
+        model = ProcessDiagram
+        # 'code' исключаем — оно создаётся автоматически
+        fields = ['name', 'bpmn_xml', 'department', 'division']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Если редактируем — запретить менять отдел и департамент
+        if self.instance and self.instance.pk:
+            self.fields['department'].disabled = True
+            self.fields['division'].disabled = True
 
 class RiskForm(forms.ModelForm):
     department = forms.ModelChoiceField(

@@ -29,7 +29,7 @@ urlpatterns = [
     path('control-points/delete/<int:pk>/', control_point_delete, name='control_point_delete'),
 
     # 👉 Карта процессов и схемы
-    path('process-map/', process_map_overview, name='process_map_overview'),
+    path('process-map/', views.department_structure, name='department_structure'),
     path('diagrams/', views.diagram_list, name='diagram_list'),
     path('diagrams/view/<int:diagram_id>/', views.diagram_view, name='diagram_view'),
     path('diagrams/edit/<int:diagram_id>/', views.edit_diagram, name='edit_diagram'),

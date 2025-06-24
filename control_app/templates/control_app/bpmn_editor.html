@@ -14,60 +14,61 @@
     <script src="{% static 'bpmn/assets/customPalette_fixed.js' %}"></script>
     <script src="{% static 'bpmn/assets/customContextPad.js' %}"></script>
     <script src="{% static 'bpmn/assets/bpmn-modeler.development.js' %}"></script>
-
 </head>
 <body>
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-2xl font-bold text-green-800 mb-6">
+        {% if diagram %}✏️ {% trans "Edit Business Process" %}{% else %}➕ {% trans "New Business Process" %}{% endif %}
+    </h1>
 
-<h1 class="text-2xl font-bold text-green-800 mb-6">✏️ {% trans "Business Process Diagram Editor" %}</h1>
+    {% if diagram %}
+        <input type="hidden" id="diagram_id" value="{{ diagram.id }}">
+    {% endif %}
 
-{% if diagram %}
-    <input type="hidden" id="diagram_id" value="{{ diagram.id }}">
-{% endif %}
+    <div class="form-block">
+        <label for="name" class="font-semibold">{% trans "Diagram Name" %}:</label>
+        <input type="text" class="input" id="name" name="name" required value="{{ diagram.name|default:'' }}">
+    </div>
 
-<div class="form-block">
-    <label for="name">{% trans "Diagram Name" %}:</label>
-    <input type="text" id="name" name="name" required value="{{ diagram.name|default:'' }}">
-</div>
-
-<div class="form-block">
-    <label for="department">{% trans "Department" %}:</label>
-    <select id="department" name="department_id" required>
-        <option value="">{% trans "-- Select Department --" %}</option>
-        {% for dept in departments %}
-            <option value="{{ dept.id }}" {% if diagram.division.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
-        {% endfor %}
-    </select>
-</div>
-
-<div class="form-block">
-    <label for="division">{% trans "Division" %}:</label>
-    <select id="division" name="division_id" required>
-        {% if diagram %}
-            {% for div in diagram.division.department.divisions.all %}
-                <option value="{{ div.id }}" {% if div.id == diagram.division.id %}selected{% endif %}>{{ div.name }}</option>
+    <div class="form-block">
+        <label for="department" class="font-semibold">{% trans "Department" %}:</label>
+        <select class="input" id="department" name="department_id" required {% if diagram %}disabled{% endif %}>
+            <option value="">{% trans "-- Select Department --" %}</option>
+            {% for dept in departments %}
+                <option value="{{ dept.id }}" {% if diagram.division.department.id == dept.id %}selected{% endif %}>{{ dept.name }}</option>
             {% endfor %}
-        {% else %}
-            <option value="">{% trans "-- First select a department --" %}</option>
-        {% endif %}
-    </select>
+        </select>
+    </div>
+
+    <div class="form-block">
+        <label for="division" class="font-semibold">{% trans "Division" %}:</label>
+        <select class="input" id="division" name="division_id" required {% if diagram %}disabled{% endif %}>
+            {% if diagram %}
+                {% for div in diagram.division.department.divisions.all %}
+                    <option value="{{ div.id }}" {% if div.id == diagram.division.id %}selected{% endif %}>{{ div.name }}</option>
+                {% endfor %}
+            {% else %}
+                <option value="">{% trans "-- First select a department --" %}</option>
+            {% endif %}
+        </select>
+    </div>
+
+    <div id="canvas" class="w-full h-[600px] border border-gray-300 bg-white mb-4"></div>
+
+    <button onclick="saveDiagram()" class="btn btn-green">💾 {% trans "Save Diagram" %}</button>
 </div>
-
-<div id="canvas" style="width: 100%; height: 600px; border: 1px solid #ccc; margin-bottom: 20px;"></div>
-
-<button onclick="saveDiagram()" class="btn btn-save">💾 {% trans "Save Diagram" %}</button>
 
 <script>
     const bpmnModeler = new BpmnJS({
-  container: '#canvas',
-  additionalModules: [
-    window.customPaletteModule,
-    window.customContextPadModule
-  ],
-  keyboard: {
-    bindTo: document
-  }
-});
-
+        container: '#canvas',
+        additionalModules: [
+            window.customPaletteModule,
+            window.customContextPadModule
+        ],
+        keyboard: {
+            bindTo: document
+        }
+    });
 
     const defaultDiagram = `<?xml version="1.0" encoding="UTF-8"?>
     <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -89,7 +90,7 @@
       </bpmndi:BPMNDiagram>
     </bpmn:definitions>`;
 
-    const diagramXML = `{% if diagram %}{{ diagram.bpmn_xml|escapejs }}{% else %}{{ default_diagram|default:'' }}{% endif %}`;
+    const diagramXML = `{% if diagram %}{{ diagram.bpmn_xml|escapejs }}{% endif %}`;
     bpmnModeler.importXML(diagramXML || defaultDiagram);
 </script>
 
@@ -158,7 +159,6 @@
             }
         });
     }
-
 </script>
 </body>
 </html>

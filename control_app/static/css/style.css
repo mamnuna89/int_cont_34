@@ -276,6 +276,37 @@ button[type="reset"] {
     margin-right: 10px;
 }
 
+.department-section {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-left: 4px solid #2563eb;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.department-section h2 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+.department-section h3 {
+    font-size: 1.1rem;
+    margin-top: 5px;
+}
+
+.department-section ul {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+button:focus {
+    outline: none;
+}
+
+.hidden {
+    display: none;
+}
+
 
 
 

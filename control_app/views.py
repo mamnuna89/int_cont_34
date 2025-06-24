@@ -132,11 +132,12 @@ def process_map_overview(request):
 
 # 👉 Список всех диаграмм
 def diagram_list(request):
-    departments = Department.objects.prefetch_related('divisions__processdiagram_set')
-    return render(request, 'control_app/diagram_list.html', {
-        'departments': departments,
+    diagrams = ProcessDiagram.objects.select_related('department', 'division').all()
+    return render(request, 'control_app/process_list.html', {
+        'diagrams': diagrams,
         'hide_sidebar': True
     })
+
 
 # 👉 Открытие редактора для новой схемы
 def editor_view(request):
@@ -166,6 +167,7 @@ def save_process_diagram(request):
     )
     return JsonResponse({'status': 'success', 'diagram_id': diagram.id})
 
+
 # 👉 Просмотр схемы
 def diagram_view(request, diagram_id):
     diagram = get_object_or_404(ProcessDiagram, id=diagram_id)
@@ -179,13 +181,10 @@ def edit_diagram(request, diagram_id):
     diagram = get_object_or_404(ProcessDiagram, id=diagram_id)
 
     if request.method == 'POST':
-        # Обновляем существующую схему
+        # ❗ Не изменяем department и division — чтобы code не сбивался
         diagram.name = request.POST.get('name')
-        diagram.department_id = request.POST.get('department_id')
-        diagram.division_id = request.POST.get('division_id')
         diagram.bpmn_xml = request.POST.get('bpmn_xml')
         diagram.save()
-
         return JsonResponse({'status': 'success'})
 
     departments = Department.objects.prefetch_related('divisions').all()
@@ -194,6 +193,7 @@ def edit_diagram(request, diagram_id):
         'diagram': diagram,
         'hide_sidebar': True
     })
+
 
 
 # 👉 Удаление схемы
@@ -251,7 +251,8 @@ def control_point_list(request):
     if selected_process:
         control_points = control_points.filter(process__icontains=selected_process)
 
-    departments = Department.objects.all()
+    departments = Department.objects.prefetch_related('divisions__processdiagram_set')
+
 
     return render(request, 'control_app/control_point_list.html', {
         'control_points': control_points,
