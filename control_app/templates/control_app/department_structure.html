@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container mx-auto px-6 py-8">
-    <h1 class="text-2xl font-bold text-green-800 mb-6">🏢 {% trans "Department Structure" %}</h1>
+    <h1 class="text-2xl font-bold text-green-800 mb-6">🏢 {% trans "Структура департаментов" %}</h1>
 
     {% for department in departments %}
         <details class="mb-4 bg-white p-4 rounded shadow" open>
@@ -21,13 +21,12 @@
                         <ul class="ml-4 mt-1 list-disc text-sm text-gray-800">
                             {% for diagram in division.processdiagram_set.all %}
                                 <li id="diagram-{{ diagram.id }}">
-    <a href="{% url 'diagram_view' diagram.id %}" class="text-blue-600 hover:underline">
-        {{ diagram.name }} ({{ diagram.code }})
-    </a>
-</li>
-
+                                    <a href="{% url 'diagram_view' diagram.id %}" class="text-blue-600 hover:underline">
+                                        {{ diagram.name }} ({{ diagram.code }})
+                                    </a>
+                                </li>
                             {% empty %}
-                                <li class="text-gray-400">{% trans "No processes found." %}</li>
+                                <li class="text-gray-400">{% trans "Нет процессов" %}</li>
                             {% endfor %}
                         </ul>
                     </details>
@@ -35,7 +34,7 @@
             </div>
         </details>
     {% empty %}
-        <p class="text-gray-600">{% trans "No departments available." %}</p>
+        <p class="text-gray-600">{% trans "Нет доступных департаментов." %}</p>
     {% endfor %}
 </div>
 {% endblock %}

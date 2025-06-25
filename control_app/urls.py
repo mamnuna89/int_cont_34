@@ -36,7 +36,7 @@ urlpatterns = [
     path('diagrams/delete/<int:diagram_id>/', views.delete_diagram, name='delete_diagram'),
     path('diagrams/save/', views.save_process_diagram, name='save_process_diagram'),
     path('bpmn/editor/', views.editor_view, name='editor_bpmn'),
-
+    
     # 👉 Экспорт
     path('control/export/', control_export_risks_excel, name='control_export_risks_excel'),
     path('control-points/export/', export_control_points_excel, name='export_control_points_excel'),

@@ -116,7 +116,7 @@ def export_risks_excel(request):
 
 # 👉 Структура департаментов
 def department_structure(request):
-    departments = Department.objects.prefetch_related('divisions').all()
+    departments = Department.objects.prefetch_related('divisions__processdiagram_set').all()
     return render(request, 'control_app/department_structure.html', {
         'departments': departments,
         'hide_sidebar': True
