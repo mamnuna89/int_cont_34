@@ -7,7 +7,8 @@
 <h2 class="module-title">📁 {% trans "Process Registry" %}</h2>
 
 <div class="top-buttons">
-    <a href="{% url 'control:process_create' %}" class="btn btn-primary">➕ {% trans "Add Process" %}</a>
+    <a href="{% url 'control:editor_bpmn' %}" class="btn btn-primary">➕ {% trans "Add Process" %}</a>
+
     <a href="{% url 'control:export_processes_excel' %}" class="btn btn-secondary">{% trans "Export to Excel" %}</a>
 </div>
 
@@ -29,18 +30,16 @@
             <td>{{ process.department.name }}</td>
             <td>{{ process.division.name }}</td>
             <td>
-                <a href="{% url 'control_app:process_edit' process.id %}" class="btn btn-sm btn-warning">✏️</a>
-                <form method="post" action="{% url 'control_app:process_delete' process.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{% trans "Are you sure you want to delete this process?" %}');">🗑️</button>
-                </form>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5" style="text-align: center; color: #777;">{% trans "No processes found." %}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+                <a href="{% url 'control:edit_diagram' process.id %}" class="btn btn-sm btn-warning">✏️</a>
+        <form method="post" action="{% url 'control:delete_diagram' process.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{% trans "Are you sure you want to delete this process?" %}');">🗑️</button>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">{% trans "No processes found." %}</td></tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endblock %}

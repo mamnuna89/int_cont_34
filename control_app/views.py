@@ -9,13 +9,18 @@ from .forms import RiskForm, ControlPointForm
 
 import openpyxl
 
-# 👉 Главная страница модуля внутреннего контроля
-def control_index(request):
-    return render(request, 'control_app/control_index.html')
+from .models import ProcessDiagram
 
 def process_list(request):
     processes = ProcessDiagram.objects.select_related('department', 'division').all()
-    return render(request, 'control_app/process_list.html', {'processes': processes})
+    return render(request, 'control_app/process_list.html', {
+        'processes': processes,
+    
+    })
+
+# 👉 Главная страница модуля внутреннего контроля
+def control_index(request):
+    return render(request, 'control_app/control_index.html')
 
 def process_create(request):
     if request.method == 'POST':
@@ -204,14 +209,17 @@ def save_process_diagram(request):
     department = Department.objects.get(id=department_id)
     division = Division.objects.get(id=division_id)
 
-    diagram = ProcessDiagram.objects.create(
+    diagram = ProcessDiagram(
         name=name,
         department=department,
         division=division,
         bpmn_xml=bpmn_xml,
         created_by=request.user if request.user.is_authenticated else None
     )
+    diagram.save()  # ВАЖНО: запускается .save(), и code создаётся автоматически
+
     return JsonResponse({'status': 'success', 'diagram_id': diagram.id})
+
 
 
 # 👉 Просмотр схемы
@@ -247,7 +255,7 @@ def edit_diagram(request, diagram_id):
 def delete_diagram(request, diagram_id):
     diagram = get_object_or_404(ProcessDiagram, id=diagram_id)
     diagram.delete()
-    return HttpResponseRedirect(reverse('diagram_list'))
+    return HttpResponseRedirect(reverse('control:process_list'))
 
 # 👉 Экспорт всех рисков
 
