@@ -1,53 +1,46 @@
-{% load static i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <title>🗂️ {% trans "Реестр процессов" %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-    <div class="container mx-auto px-6 py-8">
-        <h1 class="text-2xl font-bold text-green-800 mb-6">🗂️ {% trans "Реестр процессов" %}</h1>
+{% extends 'main_app/home.html' %}
+{% load i18n static %}
 
-        <a href="{% url 'editor_bpmn' %}" class="btn btn-green mb-4">➕ {% trans "Добавить процесс" %}</a>
+{% block title %}{% trans "Process Registry" %}{% endblock %}
 
-        <table class="table-auto w-full border border-gray-300 bg-white">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 border text-left">{% trans "Код" %}</th>
-                    <th class="px-4 py-2 border text-left">{% trans "Название" %}</th>
-                    <th class="px-4 py-2 border text-left">{% trans "Департамент" %}</th>
-                    <th class="px-4 py-2 border text-left">{% trans "Отдел" %}</th>
-                    <th class="px-4 py-2 border text-left">{% trans "Действия" %}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for diagram in diagrams %}
-                <tr class="border-t">
-                    <td class="px-4 py-2 border">
-                        <a href="{% url 'department_structure' %}#diagram-{{ diagram.id }}" class="text-blue-700 hover:underline">
-                            {{ diagram.code }}
-                        </a>
-                    </td>
-                    <td class="px-4 py-2 border">{{ diagram.name }}</td>
-                    <td class="px-4 py-2 border">{{ diagram.department.name }}</td>
-                    <td class="px-4 py-2 border">{{ diagram.division.name }}</td>
-                    <td class="px-4 py-2 border">
-                        <a href="{% url 'edit_diagram' diagram.id %}" class="btn btn-blue">✏️</a>
-                        <form action="{% url 'delete_diagram' diagram.id %}" method="post" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-red">🗑️</button>
-                        </form>
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center text-gray-500 py-4">{% trans "Нет сохранённых процессов." %}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% block content %}
+<h2 class="module-title">📁 {% trans "Process Registry" %}</h2>
+
+<div class="top-buttons">
+    <a href="{% url 'control:process_create' %}" class="btn btn-primary">➕ {% trans "Add Process" %}</a>
+    <a href="{% url 'control_app:export_processes_excel' %}" class="btn btn-secondary">{% trans "Export to Excel" %}</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Code" %}</th>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Department" %}</th>
+            <th>{% trans "Division" %}</th>
+            <th>{% trans "Actions" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for process in processes %}
+        <tr>
+            <td>{{ process.code }}</td>
+            <td>{{ process.name }}</td>
+            <td>{{ process.department.name }}</td>
+            <td>{{ process.division.name }}</td>
+            <td>
+                <a href="{% url 'control_app:process_edit' process.id %}" class="btn btn-sm btn-warning">✏️</a>
+                <form method="post" action="{% url 'control_app:process_delete' process.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('{% trans "Are you sure you want to delete this process?" %}');">🗑️</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center; color: #777;">{% trans "No processes found." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

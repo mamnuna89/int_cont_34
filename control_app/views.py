@@ -44,7 +44,7 @@ def risk_list(request):
 
     return render(request, 'control_app/control_risk_list.html', {
         'risks': risks,
-        'hide_sidebar': True
+        
     })
 
 # 👉 Создание нового риска
@@ -58,7 +58,7 @@ def risk_create(request):
         form = RiskForm()
     return render(request, 'control_app/control_risk_form.html', {
         'form': form,
-        'hide_sidebar': True
+        
     })
 
 # 👉 Редактирование риска
@@ -74,7 +74,7 @@ def risk_edit(request, risk_id):
     return render(request, 'control_app/control_risk_form.html', {
         'form': form,
         'risk': risk,
-        'hide_sidebar': True
+        
     })
 
 # 👉 Удаление риска
@@ -116,10 +116,13 @@ def export_risks_excel(request):
 
 # 👉 Структура департаментов
 def department_structure(request):
-    departments = Department.objects.prefetch_related('divisions__processdiagram_set').all()
+    departments = Department.objects.prefetch_related(
+        'divisions__processdiagram_set'
+    ).all()
+    
     return render(request, 'control_app/department_structure.html', {
         'departments': departments,
-        'hide_sidebar': True
+    
     })
 
 # 👉 Обзор карты процессов
@@ -127,7 +130,7 @@ def process_map_overview(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/process_map_overview.html', {
         'departments': departments,
-        'hide_sidebar': True
+        
     })
 
 # 👉 Список всех диаграмм
@@ -135,7 +138,7 @@ def diagram_list(request):
     diagrams = ProcessDiagram.objects.select_related('department', 'division').all()
     return render(request, 'control_app/process_list.html', {
         'diagrams': diagrams,
-        'hide_sidebar': True
+        
     })
 
 
@@ -144,7 +147,7 @@ def editor_view(request):
     departments = Department.objects.prefetch_related('divisions').all()
     return render(request, 'control_app/bpmn_editor.html', {
         'departments': departments,
-        'hide_sidebar': True
+        
     })
 
 # 👉 Сохранение схемы
@@ -191,7 +194,7 @@ def edit_diagram(request, diagram_id):
     return render(request, 'control_app/bpmn_editor.html', {
         'departments': departments,
         'diagram': diagram,
-        'hide_sidebar': True
+        
     })
 
 
@@ -259,7 +262,7 @@ def control_point_list(request):
         'departments': departments,
         'selected_department': selected_department,
         'selected_process': selected_process,
-        'hide_sidebar': True,
+        
     })
 
 # 👉 Добавление точки контроля
@@ -273,7 +276,7 @@ def control_point_create(request):
         form = ControlPointForm()
     return render(request, 'control_app/control_point_form.html', {
         'form': form,
-        'hide_sidebar': True,
+        
     })
 
 # 👉 Редактирование точки контроля
@@ -288,7 +291,7 @@ def control_point_edit(request, pk):
         form = ControlPointForm(instance=point)
     return render(request, 'control_app/control_point_form.html', {
         'form': form,
-        'hide_sidebar': True,
+        
     })
 
 # 👉 Удаление точки контроля

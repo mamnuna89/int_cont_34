@@ -69,8 +69,8 @@
 <h2 style="margin-bottom: 20px;">{% trans "Risk Register (Internal Control)" %}</h2>
 
 <div class="top-buttons">
-    <a href="{% url 'control_risk_create' %}" class="btn btn-primary">{% trans "Add New Risk" %}</a>
-    <a href="{% url 'control_export_risks_excel' %}" class="btn btn-secondary">{% trans "Export to Excel" %}</a>
+    <a href="{% url 'control:control_risk_create' %}" class="btn btn-primary">{% trans "Add New Risk" %}</a>
+    <a href="{% url 'control:control_export_risks_excel' %}" class="btn btn-secondary">{% trans "Export to Excel" %}</a>
 </div>
 
 <form method="get" class="filter-form">
@@ -90,7 +90,7 @@
     </label>
 
     <button type="submit" class="btn btn-success">{% trans "Filter" %}</button>
-    <a href="{% url 'control_risk_list' %}" class="btn btn-outline-secondary">{% trans "Reset" %}</a>
+    <a href="{% url 'control:control_risk_list' %}" class="btn btn-outline-secondary">{% trans "Reset" %}</a>
 </form>
 
 <table>
@@ -129,8 +129,8 @@
                 {{ risk.level }}
             </td>
             <td>
-                <a href="{% url 'control_risk_edit' risk.id %}" class="btn btn-sm btn-warning">{% trans "Edit" %}</a>
-                <form action="{% url 'control_risk_delete' risk.id %}" method="post" style="display:inline;" onsubmit="return confirm('{% trans "Are you sure you want to delete this risk?" %}');">
+                <a href="{% url 'control:control_risk_edit' risk.id %}" class="btn btn-sm btn-warning">{% trans "Edit" %}</a>
+                <form action="{% url 'control:control_risk_delete' risk.id %}" method="post" style="display:inline;" onsubmit="return confirm('{% trans "Are you sure you want to delete this risk?" %}');">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-danger">{% trans "Delete" %}</button>
                 </form>

@@ -11,7 +11,7 @@ urlpatterns = [
 # 👇 Основные маршруты с поддержкой мультиязычности
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
-    path('process-map/', include('process_map.urls')),
+    
     path('', include('main_app.urls')),              # Главная страница
     path('risks/', include('risk_app.urls')),        # Управление рисками
     path('control/', include('control_app.urls')),   # Внутренний контроль

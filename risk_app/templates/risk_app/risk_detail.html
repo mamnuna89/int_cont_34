@@ -1,29 +1,26 @@
+{% extends 'main_app/home.html' %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <meta charset="UTF-8">
-    <title>{% trans "Risk Detail" %}</title>
-</head>
-<body>
-    <h1>{% trans "Risk Detail" %}</h1>
 
-    <ul>
-        <li><strong>{% trans "Risk Code" %}:</strong> {{ risk.risk_code }}</li>
-        <li><strong>{% trans "Name" %}:</strong> {{ risk.name }}</li>
-        <li><strong>{% trans "Type" %}:</strong> {{ risk.risk_type }}</li>
-        <li><strong>{% trans "Source" %}:</strong> {{ risk.source }}</li>
-        <li><strong>{% trans "Registration Date" %}:</strong> {{ risk.registered_at }}</li>
-        <li><strong>{% trans "Department" %}:</strong> {{ risk.department }}</li>
-        <li><strong>{% trans "Owner" %}:</strong> {{ risk.owner }}</li>
-        <li><strong>{% trans "Process" %}:</strong> {{ risk.process }}</li>
-        <li><strong>{% trans "Probability" %}:</strong> {{ risk.probability }}</li>
-        <li><strong>{% trans "Impact" %}:</strong> {{ risk.impact }}</li>
-        <li><strong>{% trans "Risk Level" %}:</strong> {{ risk.level }}</li>
-    </ul>
+{% block content %}
+<h1 class="text-2xl font-bold text-blue-800 mb-6">{% trans "Risk Detail" %}</h1>
 
-    <a href="{% url 'risk_app:risk_update' risk.pk %}">{% trans "Edit" %}</a> |
-    <a href="{% url 'risk_app:risk_delete' risk.pk %}">{% trans "Delete" %}</a> |
-    <a href="{% url 'risk_app:risk_list' %}">{% trans "Back to List" %}</a>
-</body>
-</html>
+<ul class="mb-6 space-y-2 text-sm text-gray-800">
+    <li><strong>{% trans "Risk Code" %}:</strong> {{ risk.risk_code }}</li>
+    <li><strong>{% trans "Name" %}:</strong> {{ risk.name }}</li>
+    <li><strong>{% trans "Type" %}:</strong> {{ risk.risk_type }}</li>
+    <li><strong>{% trans "Source" %}:</strong> {{ risk.source }}</li>
+    <li><strong>{% trans "Registration Date" %}:</strong> {{ risk.registered_at }}</li>
+    <li><strong>{% trans "Department" %}:</strong> {{ risk.department }}</li>
+    <li><strong>{% trans "Owner" %}:</strong> {{ risk.owner }}</li>
+    <li><strong>{% trans "Process" %}:</strong> {{ risk.process }}</li>
+    <li><strong>{% trans "Probability" %}:</strong> {{ risk.probability }}</li>
+    <li><strong>{% trans "Impact" %}:</strong> {{ risk.impact }}</li>
+    <li><strong>{% trans "Risk Level" %}:</strong> {{ risk.level }}</li>
+</ul>
+
+<div class="space-x-4">
+    <a href="{% url 'risk_app:risk_update' risk.pk %}" class="btn btn-blue">{% trans "Edit" %}</a>
+    <a href="{% url 'risk_app:risk_delete' risk.pk %}" class="btn btn-red">{% trans "Delete" %}</a>
+    <a href="{% url 'risk_app:risk_list' %}" class="btn btn-secondary">{% trans "Back to List" %}</a>
+</div>
+{% endblock %}

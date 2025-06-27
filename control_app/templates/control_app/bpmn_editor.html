@@ -1,5 +1,9 @@
+{% extends 'main_app/home.html' %}
 {% load static %}
 {% load i18n %}
+
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
@@ -133,8 +137,8 @@
         const { xml } = await bpmnModeler.saveXML({ format: true });
 
         const url = diagramId
-            ? `{% url 'edit_diagram' 99999 %}`.replace('99999', diagramId)
-            : `{% url 'save_process_diagram' %}`;
+            ? '{% url "control:edit_diagram" 99999 %}'.replace('99999', diagramId)
+            : `{% url 'control:save_process_diagram' %}`;
 
         fetch(url, {
             method: "POST",
@@ -153,7 +157,7 @@
         .then(data => {
             if (data.status === 'success') {
                 alert("{% trans 'Diagram saved successfully!' %}");
-                window.location.href = "{% url 'diagram_list' %}";
+                window.location.href = "{% url 'control:diagram_list' %}";
             } else {
                 alert("{% trans 'Error saving diagram.' %}");
             }
@@ -162,3 +166,5 @@
 </script>
 </body>
 </html>
+</div>
+{% endblock %}

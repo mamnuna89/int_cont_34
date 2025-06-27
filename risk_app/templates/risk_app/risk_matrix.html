@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'main_app/home.html' %}
 {% load i18n custom_filters %}
 
 {% block content %}
@@ -17,7 +17,7 @@
 <div class="container max-w-6xl mx-auto px-4 py-6">
     <h2 class="text-2xl font-bold mb-6 text-center">{% trans "Risk Matrix (COSO)" %}</h2>
 
-    <form method="get" class="mb-4" style="text-align: center;">
+    <form method="get" class="mb-4 text-center">
         <label for="department" class="mr-2">{% trans "Department" %}:</label>
         <select name="department" id="department">
             <option value="">{% trans "All" %}</option>
@@ -34,48 +34,47 @@
             {% endfor %}
         </select>
 
-        <input type="submit" value="{% trans 'Filter' %}">
+        <input type="submit" value="{% trans 'Filter' %}" class="ml-2 px-3 py-1 bg-blue-600 text-white rounded">
     </form>
 
-    <div class="text-center mb-4">
-        <button disabled>{% trans "Export to PNG" %}</button>
-        <button disabled>{% trans "Export to Excel" %}</button>
+    <div class="text-center mb-4 space-x-2">
+        <button class="btn btn-secondary" disabled>{% trans "Export to PNG" %}</button>
+        <button class="btn btn-secondary" disabled>{% trans "Export to Excel" %}</button>
     </div>
 
-    <table>
-        <thead>
+    <table class="w-full border border-gray-300 text-center bg-white">
+        <thead class="bg-gray-100">
             <tr>
-                <th>{% trans "Impact ↓ / Probability →" %}</th>
+                <th class="border px-2 py-1">{% trans "Impact ↓ / Probability →" %}</th>
                 {% for prob in 1|to:6 %}
-                    <th>{{ prob }}</th>
+                    <th class="border px-2 py-1">{{ prob }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for impact in 1|to:6 reversed %}
                 <tr>
-                    <th>{{ impact }}</th>
+                    <th class="border px-2 py-1 font-medium">{{ impact }}</th>
                     {% for prob in 1|to:6 %}
                         {% with row=matrix|dict_get:impact %}
                             {% with cell=row|dict_get:prob %}
                                 {% with level=prob|mul:impact %}
-                                    <td class="
+                                    <td class="border px-2 py-1
                                         {% if level <= 6 %}
                                             risk-low
                                         {% elif level <= 14 %}
                                             risk-medium
                                         {% else %}
                                             risk-high
-                                        {% endif %}
-                                    ">
+                                        {% endif %}">
                                         {% for risk in cell %}
-                                            <div class="risk-entry">
-                                                <a href="{% url 'risk_app:risk_detail' risk.id %}">
+                                            <div class="risk-entry text-sm leading-tight">
+                                                <a href="{% url 'risk_app:risk_detail' risk.id %}" class="text-blue-600 hover:underline">
                                                     {{ risk.name }} ({{ risk.level }})
                                                 </a>
                                             </div>
                                         {% empty %}
-                                            <span style="color: #aaa;">—</span>
+                                            <span class="text-gray-400">—</span>
                                         {% endfor %}
                                     </td>
                                 {% endwith %}

@@ -35,23 +35,55 @@
         </div>
 
         <!-- 🛡 Internal Control -->
-        <div class="mb-6">
-            <h3 class="font-semibold text-gray-800 mb-2">🛡 {% trans "Internal Control" %}</h3>
-            <ul class="space-y-1 ml-2 text-blue-600 text-sm">
-                <li><a href="{% url 'control_risk_create' %}" class="hover:underline">{% trans "Add Risk" %}</a></li>
-                <li><a href="{% url 'control_risk_list' %}" class="hover:underline">{% trans "Risk Register" %}</a></li>
-                <li><a href="{% url 'control_point_create' %}" class="hover:underline">{% trans "Add Control Point" %}</a></li>
-                <li><a href="{% url 'control_point_list' %}" class="hover:underline">{% trans "Control Point Register" %}</a></li>
-            </ul>
-            <details class="mt-2">
-                <summary class="cursor-pointer text-sm text-blue-700 font-medium hover:underline">🗺 {% trans "Process Map" %}</summary>
-                <ul class="ml-4 mt-1 space-y-1 text-sm text-blue-600">
-                    <li><a href="{% url 'process_map_overview' %}" class="hover:underline">{% trans "Department Structure" %}</a></li>
-                    <li><a href="{% url 'editor_bpmn' %}" class="hover:underline">{% trans "Process Editor" %}</a></li>
-                    <li><a href="{% url 'diagram_list' %}" class="hover:underline">{% trans "Diagram Library" %}</a></li>
-                </ul>
-            </details>
-        </div>
+<div class="mb-6">
+    <h3 class="font-semibold text-gray-800 mb-2">🛡 {% trans "Internal Control" %}</h3>
+    <ul class="space-y-1 ml-2 text-blue-600 text-sm">
+        <li>
+            <a href="{% url 'control:control_risk_create' %}" class="hover:underline">
+                {% trans "Add Risk" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'control:control_risk_list' %}" class="hover:underline">
+                {% trans "Risk Register" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'control:control_point_create' %}" class="hover:underline">
+                {% trans "Add Control Point" %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'control:control_point_list' %}" class="hover:underline">
+                {% trans "Control Point Register" %}
+            </a>
+        </li>
+    </ul>
+
+    <details class="mt-2">
+        <summary class="cursor-pointer text-sm text-blue-700 font-medium hover:underline">
+            🗺 {% trans "Process Map" %}
+        </summary>
+        <ul class="ml-4 mt-1 space-y-1 text-sm text-blue-600">
+            <li>
+                <a href="{% url 'control:department_structure' %}" class="hover:underline">
+                    {% trans "Department Structure" %}
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'control:editor_bpmn' %}" class="hover:underline">
+                    {% trans "Process Editor" %}
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'control:diagram_list' %}" class="hover:underline">
+                    {% trans "Diagram Library" %}
+                </a>
+            </li>
+        </ul>
+    </details>
+</div>
+
 
         <!-- ⚖ Compliance Control -->
         <div class="mb-6">

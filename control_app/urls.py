@@ -9,6 +9,8 @@ from .views import (
     control_point_delete,
 )
 
+app_name = 'control'
+
 urlpatterns = [
     # 👉 Главная
     path('', views.control_index, name='control_index'),
@@ -43,4 +45,12 @@ urlpatterns = [
 
     # 👉 AJAX
     path('ajax/get-risks-by-process/', views.get_risks_by_process, name='get_risks_by_process'),
+
+    # 👉 Процессы
+    path('processes/', views.process_list, name='process_list'),
+    path('processes/add/', views.process_create, name='process_create'),
+    path('processes/export/', views.export_processes_excel, name='export_processes_excel'),
+    path('processes/<int:pk>/edit/', views.process_edit, name='process_edit'),
+    path('processes/<int:pk>/delete/', views.process_delete, name='process_delete'),
+
 ]
