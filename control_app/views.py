@@ -13,6 +13,49 @@ import openpyxl
 def control_index(request):
     return render(request, 'control_app/control_index.html')
 
+def process_list(request):
+    processes = ProcessDiagram.objects.select_related('department', 'division').all()
+    return render(request, 'control_app/process_list.html', {'processes': processes})
+
+def process_create(request):
+    if request.method == 'POST':
+        form = ProcessDiagramForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('control:process_list')
+    else:
+        form = ProcessDiagramForm()
+    return render(request, 'control_app/process_form.html', {'form': form})
+
+def process_edit(request, pk):
+    process = get_object_or_404(ProcessDiagram, pk=pk)
+    if request.method == 'POST':
+        form = ProcessDiagramForm(request.POST, instance=process)
+        if form.is_valid():
+            form.save()
+            return redirect('control:process_list')
+    else:
+        form = ProcessDiagramForm(instance=process)
+    return render(request, 'control_app/process_form.html', {'form': form})
+
+def process_delete(request, pk):
+    process = get_object_or_404(ProcessDiagram, pk=pk)
+    process.delete()
+    return redirect('control:process_list')
+
+def export_processes_excel(request):
+    processes = ProcessDiagram.objects.all()
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(['Code', 'Name', 'Department', 'Division'])
+    for p in processes:
+        ws.append([p.code, p.name, p.department.name if p.department else '', p.division.name if p.division else ''])
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=processes.xlsx'
+    wb.save(response)
+    return response
+
 # 👉 Отображение списка рисков
 def risk_list(request):
     risks = Risk.objects.all()
